@@ -4,6 +4,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
 import { AppState } from './app.service';
+import { FooterComponent } from './footer.component';
 
 /*
  * App Component
@@ -48,20 +49,11 @@ import { AppState } from './app.service';
 
     <pre class="app-state">this.appState.state = {{ appState.state | json }}</pre>
 
-    <footer>
-      <span>WebPack Angular 2 Starter by <a [href]="url">@AngularClass</a></span>
-      <div>
-        <a [href]="url">
-          <img [src]="angularclassLogo" width="25%">
-        </a>
-      </div>
-    </footer>
+    <udm-footer></udm-footer>
   `
 })
 export class AppComponent {
-  angularclassLogo = 'assets/img/angularclass-avatar.png';
-  name = 'Angular 2 Webpack Starter';
-  url = 'https://twitter.com/AngularClass';
+  name = 'Urban Decision Maker';
 
   constructor(
     public appState: AppState) {
