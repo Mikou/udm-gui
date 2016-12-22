@@ -1,11 +1,11 @@
 {
   "vendor": {
-    "js": "/udm-gui/vendor.f34e622e981de703287e.bundle.js"
+    "js": "/udm-gui/vendor.bundle.js"
   },
   "main": {
-    "js": "/udm-gui/main.c92d2f6228abf3166a88.bundle.js"
+    "js": "/udm-gui/main.bundle.js"
   },
   "polyfills": {
-    "js": "/udm-gui/polyfills.e6be7a6304564af2ebba.bundle.js"
+    "js": "/udm-gui/polyfills.bundle.js"
   }
 }

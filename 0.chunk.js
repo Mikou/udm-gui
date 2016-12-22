@@ -1,15 +1,15 @@
 webpackJsonpac__name_([0],{
 
-/***/ 683:
+/***/ 728:
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 "use strict";
-var common_1 = __webpack_require__(72);
-var forms_1 = __webpack_require__(187);
+var common_1 = __webpack_require__(75);
+var forms_1 = __webpack_require__(53);
 var core_1 = __webpack_require__(0);
-var router_1 = __webpack_require__(134);
-var detail_component_1 = __webpack_require__(685);
+var router_1 = __webpack_require__(43);
+var detail_component_1 = __webpack_require__(730);
 console.log('`Detail` bundle loaded asynchronously');
 // async components must be named routes for WebpackAsyncRoute
 exports.routes = [
@@ -41,7 +41,7 @@ exports.default = AboutModule;
 
 /***/ },
 
-/***/ 685:
+/***/ 730:
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
