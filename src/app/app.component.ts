@@ -19,14 +19,14 @@ import { FooterComponent } from './footer.component';
   template: `
     <nav>
       <span>
-        <a [routerLink]=" ['./'] ">
-          Index
+        <a [routerLink]=" ['./home'] ">
+          Home
         </a>
       </span>
       |
       <span>
-        <a [routerLink]=" ['./home'] ">
-          Home
+        <a [routerLink]=" ['./decisionspaces'] ">
+          Decision Spaces
         </a>
       </span>
     </nav>
