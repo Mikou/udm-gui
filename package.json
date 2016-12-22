@@ -2,8 +2,7 @@
   "name": "udm",
   "version": "5.1.1",
   "description": "urban decision maker",
-  "keywords": [
-  ],
+  "keywords": [],
   "author": "Michael Jespersen <mjes@itu.dk>",
   "license": "MIT",
   "scripts": {
@@ -72,6 +71,7 @@
     "core-js": "^2.4.1",
     "http-server": "^0.9.0",
     "ie-shim": "^0.1.0",
+    "immutable": "^3.8.1",
     "rxjs": "5.0.0-beta.12",
     "zone.js": "~0.6.26"
   },
