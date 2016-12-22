@@ -1,0 +1,11 @@
+{
+  "vendor": {
+    "js": "/udm-gui/vendor.bundle.js"
+  },
+  "main": {
+    "js": "/udm-gui/main.bundle.js"
+  },
+  "polyfills": {
+    "js": "/udm-gui/polyfills.bundle.js"
+  }
+}
