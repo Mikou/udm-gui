@@ -4,9 +4,10 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { VisCtrlComponent} from './visCtrl.component';
 import { VisCtrlService } from './visCtrl.service';
 import { CreateVisCtrlComponent} from './createVisCtrl.component';
+import { VisCtrl } from './../../toolbar/visControls/visCtrl.model';
 
 @Component({
-  selector: 'ud2d-visctrls',
+  selector: 'udm-visctrls',
   styles: [
     `
       udm-visctrl {
@@ -35,7 +36,7 @@ import { CreateVisCtrlComponent} from './createVisCtrl.component';
 
 export class VisCtrlsComponent {
   title = 'visualization browser';
-  visCtrls:any = [];
+  visCtrls:VisCtrl[] = [];
 
   constructor (
     //private connectionService: ConnectionService,
@@ -48,7 +49,7 @@ export class VisCtrlsComponent {
   ngOnInit() {
     //this.getVisCtrls();
     this.visCtrlService.visCtrls.subscribe( (visCtrls) => {
-        this.zone.run( () => this.visCtrls = visCtrls );
+        this.zone.run( () => this.visCtrls = visCtrls.toArray() );
     });
   }
 

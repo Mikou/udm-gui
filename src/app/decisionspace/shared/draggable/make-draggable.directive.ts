@@ -10,8 +10,8 @@ export class MakeDraggable {
   
   ngOnInit() {
     // Get the current element
-    let el = this._elementRef.nativeElement.querySelector('li');
-    
+    //let el = this._elementRef.nativeElement.querySelector('li');
+    let el = this._elementRef.nativeElement.querySelector('.dragHandler');    
     // Set the draggable attribute to the element
     el.draggable = 'true';
     

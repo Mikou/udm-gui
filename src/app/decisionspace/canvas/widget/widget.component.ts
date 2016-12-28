@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MakeDraggable } from '../../shared/draggable/make-draggable.directive';
-import {VisualizationComponent} from './visualization.component';
+import { VisualizationComponent } from './visualization.component';
 import { CommentFeatureComponent } from './featureComponents/comment.component';
 import { CommentarchiveComponent } from './featureComponents/commentarchive.component';
 import { FeatureCtrl } from './featureCtrl.model';
@@ -20,9 +20,9 @@ import { FeatureCtrl } from './featureCtrl.model';
   selector: 'udm-widget',
   template: `
     <div [makeDraggable]="item" makeDroppable (dropped)="droppedWidget($event)">
-        <li>
+        <div class="dragHandler">
             <p>{{item.title}} <button (click)="deleteWidget(item.id)">delete</button></p>
-        </li>
+        </div>
         <div #target></div>
     </div>
   `

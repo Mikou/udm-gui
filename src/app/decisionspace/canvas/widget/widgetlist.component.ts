@@ -4,6 +4,7 @@ import { WidgetComponent } from './widget.component';
 import { ActivatedRoute } from '@angular/router';
 
 import { WidgetService } from './widget.service';
+import { VisCtrl } from './../../toolbar/visControls/visCtrl.model';
 
 @Component({
   selector: 'ud2d-widgetlist',
@@ -87,7 +88,8 @@ export class WidgetlistComponent implements OnInit {
     });
   }
   droppedWidget(src: any, trg: any) {
-    if(src.type === 'visItem') {
+    console.log("DROPPED STUFF", src);
+    if(src.type === 'VISCTRL') {
       this.deployVisualization(src.name, src.url);
     } else if(src.type === 'featureItem') {
       this.deployFeature(src);

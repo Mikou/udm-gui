@@ -6,6 +6,7 @@ import { RouterModule, PreloadAllModules } from '@angular/router';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 
 import { DecisionspaceModule} from './decisionspace/decisionspace.module';
+import { ToolbarModule } from './decisionspace/toolbar/toolbar.module';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -18,9 +19,11 @@ import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState, InternalStateType } from './app.service';
 import { HomeComponent } from './home';
 import { AboutComponent } from './about';
+import { MenuComponent } from './menu.component';
 import { FooterComponent } from './footer.component';
 import { NoContentComponent } from './no-content';
 import { XLarge } from './home/x-large';
+import { ConnectionTestComponent } from './connectionTest.component';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -45,6 +48,8 @@ type StoreType = {
     AboutComponent,
     HomeComponent,
     NoContentComponent,
+    MenuComponent,
+    ConnectionTestComponent,
     XLarge
   ],
   imports: [ // import Angular's modules
@@ -52,7 +57,8 @@ type StoreType = {
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules }),
-    DecisionspaceModule
+    DecisionspaceModule,
+    ToolbarModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

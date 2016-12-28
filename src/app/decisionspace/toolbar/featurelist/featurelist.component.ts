@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'ud2d-featurelist',
+  selector: 'udm-featurelist',
   template: `
     <h3>{{title}}</h3>
     <ud2d-featurelistitem 

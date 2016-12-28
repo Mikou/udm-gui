@@ -5,8 +5,8 @@ import {VislistComponent} from './visControls/vislist.component'
   selector: 'udm-toolbar',
   template: `
     <h2>{{title}}</h2>
-    <ud2d-visctrls></ud2d-visctrls>
-    <ud2d-featurelist></ud2d-featurelist>
+    <udm-visctrls></udm-visctrls>
+    <udm-featurelist></udm-featurelist>
   `
 })
 

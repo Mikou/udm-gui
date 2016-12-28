@@ -2,8 +2,8 @@
  * Angular 2 decorators and services
  */
 import { Component, ViewEncapsulation } from '@angular/core';
-
 import { AppState } from './app.service';
+import { MenuComponent } from './menu.component';
 import { FooterComponent } from './footer.component';
 
 /*
@@ -17,35 +17,45 @@ import { FooterComponent } from './footer.component';
     './app.component.css'
   ],
   template: `
-    <nav>
-      <span>
-        <a [routerLink]=" ['./home'] ">
-          Home
-        </a>
-      </span>
-      |
-      <span>
-        <a [routerLink]=" ['./decisionspaces'] ">
-          Decision Spaces
-        </a>
-      </span>
-    </nav>
+    <div class="nav-bar">
+      <nav>
+        <span>
+          <a [routerLink]=" ['./home'] ">
+            Home
+          </a>
+        </span>
+        |
+        <span>
+          <a [routerLink]=" ['./decisionspaces'] ">
+            Decision Spaces
+          </a>
+        </span>
+        |
+        <span>
+          <a [routerLink]=" ['./connectiontest'] ">
+            backend test
+          </a>
+        </span>
+      </nav>
+    </div>
 
-    <main>
-      <router-outlet></router-outlet>
-    </main>
+    <div class="globalContainer">
+      <udm-menu *ngIf="displayMenu"></udm-menu>
 
-    <pre class="app-state">this.appState.state = {{ appState.state | json }}</pre>
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
 
     <udm-footer></udm-footer>
   `
 })
 export class AppComponent {
   name = 'Urban Decision Maker';
+  displayMenu:boolean = true;
 
   constructor(
     public appState: AppState) {
-
   }
 
   ngOnInit() {

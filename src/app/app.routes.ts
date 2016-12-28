@@ -5,6 +5,8 @@ import { NoContentComponent } from './no-content';
 import { DataResolver } from './app.resolver';
 import { DecisionspacesComponent } from './decisionspace/decisionspaces.component';
 import { DecisionspaceComponent } from './decisionspace/decisionspace.component';
+import { ConnectionTestComponent } from './connectionTest.component';
+
 import { CreateDecisionspaceComponent } from './decisionspace/createdecisionspace.component';
 
 export const ROUTES: Routes = [
@@ -15,6 +17,7 @@ export const ROUTES: Routes = [
     path: 'detail', loadChildren: () => System.import('./+detail')
       .then((comp: any) => comp.default),
   },
+  { path: 'connectiontest',    component: ConnectionTestComponent },
   { path: 'decisionspaces',    component: DecisionspacesComponent },
   { path: 'decisionspaces/:id',    component: DecisionspaceComponent },
   { path: 'create-decisionspace',    component: CreateDecisionspaceComponent },

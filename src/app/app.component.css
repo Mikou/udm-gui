@@ -1,8 +1,93 @@
 html, body{
   height: 100%;
+  font-size: 75%;
   font-family: Arial, Helvetica, sans-serif
 }
 
+body {
+  margin:0;
+  font-size: 1rem;
+  background-color: #ddeeee;
+}
+
+a{
+  color:slategray;
+  text-decoration: none;
+}
+a::visited {
+
+  color:darkslategray;
+  text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+app {
+  margin:0;
+}
+.nav-bar {
+  background-color: lightslategray;
+  padding: 5px;
+}
+nav {
+  width:960px;
+  margin:0 auto;
+}
+nav a {
+  color: #fff;
+}
+nav a:visited {
+  color: #fff;
+}
+nav span {
+  margin:0 5px;
+}
+nav udm-security {
+  float:right;
+}
 span.active {
   background-color: gray;
+}
+.globalContainer {
+  width:960px;
+  margin: 10px auto 0;
+}
+
+.content {
+  margin-left:0;
+}
+udm-menu {
+  width:151px;
+  float:left;
+}
+/* if content is preceeded by the menu */
+udm-menu + .content {
+  margin-left:150px;
+}
+
+udm-toolbar {
+  display: block;
+  border: 1px solid darkslategray;
+  border-right: none;
+  padding:5px;
+  z-index: 100;
+  background-color: #ddeeee;
+
+}
+
+udm-decisionspace {
+  display: block;
+  padding:5px;
+  min-height:600px;
+  border-left: 1px solid darkslategray;     
+}
+
+footer {
+  border-top:1px cornflowerblue solid;
+  margin-top: 20px;
+}
+footer .note {
+  width: 960px;
+  margin:0 auto;
 }
