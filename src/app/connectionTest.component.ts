@@ -22,7 +22,7 @@ export class ConnectionTestComponent {
         
         //const url:string = "ws://127.0.0.1:8082/ws";
         let url:string;
-        if (document.location.host === 'udm.herokuapp.com') {
+        if (document.location.host === 'mikou.github.io') {
             url = (document.location.protocol === "http:" ? "ws" : "wss") + "//udm.herokuapp.com/ws";
         } else {
             url = (document.location.protocol === "http:" ? "ws" : "wss") + "//" +
