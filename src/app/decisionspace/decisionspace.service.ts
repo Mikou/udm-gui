@@ -29,8 +29,6 @@ export class DecisionspaceService {
         this.connectorService.call('udm.backend.decisionspaceList', [user]).then( (decisionspaces:List<DecisionSpace>) => {
             this._decisionspaces.next(decisionspaces);
         });
-        let list = List(DECISIONSPACES);
-        this._decisionspaces.next(list);
         return this.decisionspaces;
     }
 
@@ -48,12 +46,12 @@ export class DecisionspaceService {
 
     getDecisionSpaceInfo(id:number) {
         return new Promise( (resolve, reject) => {
-            resolve(DECISIONSPACES[id]);
-            /*this.connectionService.call('udm.backend.getDecisionspaceById', [id]).then( decisionspace => {
+            //resolve(DECISIONSPACES[id]);
+            this.connectorService.call('udm.backend.getDecisionspaceById', [id]).then( decisionspace => {
                 resolve(decisionspace)
             }).catch( err => {
                 reject("could not get decision space informations");
-            })*/
+            })
         });
   
     }

@@ -19,7 +19,8 @@ export const ROUTES: Routes = [
   },
   { path: 'connectiontest',    component: ConnectionTestComponent },
   { path: 'decisionspaces',    component: DecisionspacesComponent },
-  { path: 'decisionspaces/:id',    component: DecisionspaceComponent },
+  { path: 'decisionspaces/:who',    component: DecisionspacesComponent },
+  { path: 'decisionspaces/detail/:id',    component: DecisionspaceComponent },
   { path: 'create-decisionspace',    component: CreateDecisionspaceComponent },
   { path: '**',    component: NoContentComponent },
 ];

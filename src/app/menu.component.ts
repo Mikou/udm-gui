@@ -27,7 +27,7 @@ export class MenuComponent {
     constructor (private router: Router) {
         this.router.events.subscribe((event:Event) => {
             if(event instanceof NavigationStart) {
-                var re = new RegExp("decisionspaces\/[0-9]");
+                var re = new RegExp("decisionspaces\/detail\/[0-9]");
                 this.displayToolbar = (re.test(event.url));
 
 

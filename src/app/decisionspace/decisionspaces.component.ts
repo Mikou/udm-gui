@@ -1,4 +1,5 @@
 import { Component, NgZone }    from '@angular/core';
+import { ActivatedRoute }       from '@angular/router';
 import { DecisionspaceService } from './decisionspace.service'
 import { ConnectionService}     from '../socketFactory/connection.service';
 import { Router }               from '@angular/router';
@@ -39,6 +40,7 @@ export class DecisionspacesComponent {
     decisionspaces:List<any>;
 
     constructor(
+        private activatedRoute: ActivatedRoute,
         private decisionspaceService: DecisionspaceService,
         private securityService: SecurityService,
         private router: Router,
@@ -46,10 +48,20 @@ export class DecisionspacesComponent {
     ) {}
 
     ngOnInit() {
-        const user:User = this.securityService.getCurrentUser();
-        this.decisionspaceService.fetchList(user).subscribe(decisionspaces => {
-            this.zone.run( () => this.decisionspaces = decisionspaces );
+
+        this.activatedRoute.params.subscribe(p => {
+            if (p["who"]) {
+                /*this.decisionspaceService.fetchList(user, p["who"]).subscribe(decisionspaces => {
+                    this.zone.run( () => this.decisionspaces = decisionspaces );
+                });*/
+            } else {
+                this.decisionspaceService.fetchList(user).subscribe(decisionspaces => {
+                    this.zone.run( () => this.decisionspaces = decisionspaces );
+                });
+            }
         });
+        const user:User = this.securityService.getCurrentUser();
+
     }
 
     newDecisionspace() {

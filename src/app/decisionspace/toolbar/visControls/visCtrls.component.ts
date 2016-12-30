@@ -5,6 +5,7 @@ import { VisCtrlComponent} from './visCtrl.component';
 import { VisCtrlService } from './visCtrl.service';
 import { CreateVisCtrlComponent} from './createVisCtrl.component';
 import { VisCtrl } from './../../toolbar/visControls/visCtrl.model';
+import { SecurityService } from './../../../security/security.service';
 
 @Component({
   selector: 'udm-visctrls',
@@ -34,35 +35,40 @@ import { VisCtrl } from './../../toolbar/visControls/visCtrl.model';
       [item]="visCtrl"
     >
     </udm-visctrl>
-    <udm-createVisCtrl></udm-createVisCtrl>
+    <div *ngIf="showCreateForm">
+      <udm-createVisCtrl></udm-createVisCtrl>
+    </div>
   `
 })
 
 export class VisCtrlsComponent {
   title = 'visualization browser';
+  showCreateForm:boolean = false;
   visCtrls:VisCtrl[] = [];
 
   constructor (
     //private connectionService: ConnectionService,
     private visCtrlService: VisCtrlService,
+    private securityService: SecurityService,
     private zone:NgZone
   ) {    
   }
 
   ngOnInit() {
-    //this.getVisCtrls();
+    this.securityService.selectedUser$.subscribe( (user) => {
+      if(user) {
+        console.log(user);
+
+        if(user.roles.find(name => name == 'admin' )) {
+          console.log("FOUND");
+          this.showCreateForm = true;
+        }
+      }
+
+    });
+
     this.visCtrlService.visCtrls.subscribe( (visCtrls) => {
       this.zone.run( () => this.visCtrls = visCtrls.toArray() );
     });
   }
-
-  /*getVisCtrls() {
-    this.visCtrlService.getControls().then( (visCtrls:any) => {
-        this.visCtrls = visCtrls;
-    });
-    this.connectionService.call('udm.backend.visCtrls', []).then( (visCtrls:any) => {
-        this.visCtrls = visCtrls;
-    });
-  };*/
-
 }

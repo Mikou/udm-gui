@@ -23,7 +23,7 @@ export class DecisionspacePreviewComponent {
     @Input() decisionspace:any;
 
     onClick(dspace:any) {
-        let link = ['/decisionspaces', this.decisionspace.id];
+        let link = ['/decisionspaces/detail', this.decisionspace.id];
         this.router.navigate(link);
     }
 }
