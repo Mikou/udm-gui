@@ -5,6 +5,8 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { AppState } from './app.service';
 import { MenuComponent } from './menu.component';
 import { FooterComponent } from './footer.component';
+import { SecurityService } from './security/security.service';
+import { SecurityNavComponent } from './securityNav.component';
 
 /*
  * App Component
@@ -36,6 +38,14 @@ import { FooterComponent } from './footer.component';
             backend test
           </a>
         </span>
+
+        <udm-securitynav></udm-securitynav>
+
+        <!--<span class="login">
+          <a [routerLink]=" ['./login'] ">
+            login
+          </a>
+        </span>-->
       </nav>
     </div>
 
@@ -55,11 +65,16 @@ export class AppComponent {
   displayMenu:boolean = true;
 
   constructor(
-    public appState: AppState) {
-  }
+    public securityService: SecurityService,
+    public appState: AppState
+    ) 
+  {}
 
   ngOnInit() {
     console.log('Initial App State', this.appState.state);
+    this.securityService.selectedUser$.subscribe( (user) => {
+      console.log(user);
+    })
   }
 
 }

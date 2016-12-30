@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ToolbarComponent } from './decisionspace/toolbar/toolbar.component';
 import { Router, NavigationStart, Event } from '@angular/router';
+import { NotificationComponent } from './notification/notification.component';
 
 @Component({
     selector: 'udm-menu',
@@ -16,6 +17,7 @@ import { Router, NavigationStart, Event } from '@angular/router';
             </li>
         </ul>
         <udm-toolbar *ngIf="displayToolbar"></udm-toolbar>
+        <udm-notification></udm-notification>
     `
 })
 export class MenuComponent {

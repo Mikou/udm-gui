@@ -4,7 +4,8 @@ import { MakeDraggable } from '../../shared/draggable/make-draggable.directive';
 
 
 @Component({
-  selector: 'ud2d-featurelistitem',
+  selector: 'udm-featurelistitem',
+  styles: [],
   template: `
     <div [makeDraggable]="item"><div class="dragHandler">{{item.name}}</div></div>
   `

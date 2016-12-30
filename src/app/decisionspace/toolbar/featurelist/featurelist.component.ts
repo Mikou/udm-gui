@@ -2,13 +2,22 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'udm-featurelist',
+  styles: [`
+    udm-featurelistitem {
+      padding: 2px;
+      margin: 4px 0;
+      background-color: #fff;
+      border-left:2px solid #00f;
+      display: block;
+    }
+  `],
   template: `
     <h3>{{title}}</h3>
-    <ud2d-featurelistitem 
+    <udm-featurelistitem 
       *ngFor="let featureitem of featureitems" 
       [item]="featureitem"
     >
-    </ud2d-featurelistitem>
+    </udm-featurelistitem>
   `
 })
 

@@ -11,13 +11,20 @@ import { UserinvitationComponent } from './userinvitation.component'
   selector: 'udm-decisionspace',
   template: `
     <div class="intro">
-      <h1>{{title}}</h1>
-      <p>{{description}}</p>
-      <udm-inviteuser></udm-inviteuser>
+      <span><strong>{{title}}</strong> | {{description}}</span>
     </div>
+    <udm-inviteuser></udm-inviteuser>
     <ud2d-canvas [decisionspaceId]="'ds'" [ngClass]="role"></ud2d-canvas>
   `,
   styles: [`
+    .intro {
+      color:#fff;
+      padding:1px 5px;
+      background-color:lightslategray;
+    }
+    udm-inviteuser {
+      float:right;
+    }
     #content {
       background-color:#eee;
       padding:10px;

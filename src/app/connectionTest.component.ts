@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-let autobahn = require('autobahn');
+import { ConnectorService } from './connector/connector.service';
+import { NotificationService } from './notification/notification.service';
 
+let autobahn = require('autobahn');
 
 @Component({
     selector: 'udm-connectiontest',
@@ -17,40 +19,21 @@ let autobahn = require('autobahn');
 export class ConnectionTestComponent {
     private logs:string[] = [];
     private send:boolean = false;
-    private connection:any;
-    constructor() {
-        
-        //const url:string = "ws://127.0.0.1:8082/ws";
-        let url:string;
-        if (document.location.host === 'mikou.github.io') {
-            url = (document.location.protocol === "http:" ? "ws" : "wss") + "://udm.herokuapp.com/ws";
-        } else {
-            url = (document.location.protocol === "http:" ? "ws" : "wss") + "://" +
-                   document.location.host + "/ws";
-        }
-
-        this.connection = new autobahn.Connection({
-            url:url,
-            realm: 'realm1'
-        });
-
-        this.connection.open();
-        this.connection.onclose = function (reason, details) {
-            if(reason == "unreachable") {
-                const msg = "The server application is unreachable. Maybe it is idle?";
-                console.log(msg);
-                //notificationService.notify(msg);
-            }
-        };
-
+    constructor(
+        private connectorService:ConnectorService,
+        private notificationService:NotificationService
+    ) {
         this.log();
     }
 
     log() {
-        if(this.send && this.connection.isOpen) {
-            this.connection.session.call('udm.backend.test', ["message from angular"]).then( (data) => {
+        if(this.send) {
+            this.notificationService.notify("send");
+            this.connectorService.call('udm.backend.test', ["message from angular"]).then( (data) => {
                 this.logs.push(data);
-            })
+            }).catch( (err) => {
+                console.log(err);
+            });
         }
 
         setTimeout( () => {

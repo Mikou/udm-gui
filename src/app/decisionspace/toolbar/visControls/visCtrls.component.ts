@@ -11,15 +11,19 @@ import { VisCtrl } from './../../toolbar/visControls/visCtrl.model';
   styles: [
     `
       udm-visctrl {
-        list-style: none;
+        padding: 2px;
+        margin: 4px 0;
+        background-color: #fff;
+        border-left:2px solid #f00;
+        display: block;
       }
-
       udm-createVisCtrl {
-        border:1px solid #ccc;
-        opacity:0.5;
+        background-color:#fff;
         float:left;
+        opacity:0.75;
         padding:5px;
         font-size:.75em;
+        width:180px;
       }
     `
   ],
@@ -42,14 +46,13 @@ export class VisCtrlsComponent {
     //private connectionService: ConnectionService,
     private visCtrlService: VisCtrlService,
     private zone:NgZone
-  ) {
-    
+  ) {    
   }
 
   ngOnInit() {
     //this.getVisCtrls();
     this.visCtrlService.visCtrls.subscribe( (visCtrls) => {
-        this.zone.run( () => this.visCtrls = visCtrls.toArray() );
+      this.zone.run( () => this.visCtrls = visCtrls.toArray() );
     });
   }
 

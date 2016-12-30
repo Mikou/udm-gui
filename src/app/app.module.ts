@@ -1,12 +1,15 @@
 import { NgModule, ApplicationRef } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { BrowserModule }            from '@angular/platform-browser';
+import { FormsModule }              from '@angular/forms';
+import { HttpModule }               from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 
 import { DecisionspaceModule} from './decisionspace/decisionspace.module';
-import { ToolbarModule } from './decisionspace/toolbar/toolbar.module';
+import { ToolbarModule }      from './decisionspace/toolbar/toolbar.module';
+import { ConnectorModule }    from './connector/connector.module';
+import { NotificationModule }    from './notification/notification.module';
+import { SecurityModule } from './security/security.module';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -58,7 +61,10 @@ type StoreType = {
     HttpModule,
     RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules }),
     DecisionspaceModule,
-    ToolbarModule
+    ToolbarModule,
+    ConnectorModule,
+    NotificationModule,
+    SecurityModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

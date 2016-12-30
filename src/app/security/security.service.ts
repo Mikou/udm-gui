@@ -6,8 +6,7 @@ import { CandidateUser }         from './candidateUser.model';
 import { Role }         from './role.model';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject }      from 'rxjs/BehaviorSubject';
-import { ConnectionService } from '../socketFactory/connection.service'
-
+import { ConnectorService } from '../connector/connector.service'
 import { Subject } from 'rxjs/Subject';
 
 //http://stackoverflow.com/questions/33675155/creating-and-returning-observable-from-angular-2-service
@@ -23,7 +22,7 @@ export class SecurityService {
     public messages: Subject<Message>;
 
     constructor(
-        //private connectionService:ConnectionService
+        private connectorService:ConnectorService
     ) {
         
     }
@@ -50,9 +49,20 @@ export class SecurityService {
         return user;
     }
 
-    userLogin(username:string, password:string): Promise<User> {
-        return Promise.reject("Not yet implemented");
-        //return this.connectionService.call('udm.backend.userLogin', [user]);
+    userLogin(user:User): Promise<User> {
+        return new Promise( (resolve, reject) => {
+            this.connectorService.call('udm.backend.userLogin', [user]).then( (user:User) => {
+                this._selectedUser.next(user);
+                resolve(user);
+            }).catch(err => {
+                reject(err);
+            });
+        });
+
+    }
+
+    setLoggedInUser(user:User) {
+        this._selectedUser.next(user);
     }
 
     getUsers(): Promise<User[]> {

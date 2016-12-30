@@ -1,14 +1,13 @@
-import { NgZone } from '@angular/core';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject }      from 'rxjs/BehaviorSubject';
-import { List }            from 'immutable';
-//import { ConnectionService } from '../socketFactory/connection.service';
-import { DecisionSpace } from './decisionspace.model';
-import { DECISIONSPACES } from './decisionspaces.mock';
-import { User } from '../security/user.model'
+import { NgZone }           from '@angular/core';
+import { Injectable }       from '@angular/core';
+import { Observable }       from 'rxjs/Observable';
+import { BehaviorSubject }  from 'rxjs/BehaviorSubject';
+import { ConnectorService } from '../connector/connector.service';
+import { DecisionSpace }    from './decisionspace.model';
+import { DECISIONSPACES }   from './decisionspaces.mock';
+import { User }             from '../security/user.model'
+import { List }             from 'immutable';
 
-//import { SocketFactoryService} from '../socketFactory/socketFactory.service';
 
 //http://stackoverflow.com/questions/33675155/creating-and-returning-observable-from-angular-2-service
 
@@ -20,19 +19,17 @@ export class DecisionspaceService {
     public decisionspaces: Observable<List<DecisionSpace>> = this._decisionspaces.asObservable();
 
     constructor(
-        //private connectionService:ConnectionService,
+        private connectorService:ConnectorService,
         private zone:NgZone
     ) {
 
     }
 
     fetchList(user:User) {
-        /*this.connectionService.call('udm.backend.decisionspaceList', [user]).then( (decisionspaces:List<DecisionSpace>) => {
+        this.connectorService.call('udm.backend.decisionspaceList', [user]).then( (decisionspaces:List<DecisionSpace>) => {
             this._decisionspaces.next(decisionspaces);
-        });*/
-
+        });
         let list = List(DECISIONSPACES);
-        
         this._decisionspaces.next(list);
         return this.decisionspaces;
     }

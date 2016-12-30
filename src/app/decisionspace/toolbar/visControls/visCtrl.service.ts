@@ -15,12 +15,18 @@ export class VisCtrlService {
     constructor(
         //private connectionService: ConnectionService
     ) {
-
         this._visCtrls.next(List<VisCtrl>(VISCTRLS));
         /*this.connectionService.call('udm.backend.getVisCtrls', []).then(res => {
             this._visCtrls.next(res);
         }).catch(err => {
             console.log(err);
         });*/
+    }
+
+    create(visCtrl:any) {
+        let list:List<VisCtrl>  = this._visCtrls.getValue();
+        let arr:Array<VisCtrl> = list.toArray();
+        arr.push(visCtrl);
+        this._visCtrls.next(List(arr)   );
     }
 }

@@ -12,6 +12,7 @@ import { DecisionspaceService } from './decisionspace.service';
 import { UserinvitationComponent } from './userinvitation.component';
 import { UserinvitationService } from './userinvitation.service';
 import { SecurityModule } from '../security/security.module';
+import { ConnectorModule } from '../connector/connector.module';
 
 @NgModule({
   imports: [ 
@@ -21,6 +22,7 @@ import { SecurityModule } from '../security/security.module';
     ToolbarModule,
     CanvasModule,
     SecurityModule,
+    ConnectorModule
   ],
   providers: [ DecisionspaceService, UserinvitationService ],
   declarations: [ 

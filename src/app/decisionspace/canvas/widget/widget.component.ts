@@ -27,7 +27,6 @@ import { FeatureCtrl } from './featureCtrl.model';
     </div>
   `
 })
-
 export class WidgetComponent {
     @Input() item: any;
     @Output() deleteWidgetNotify: EventEmitter<number> = new EventEmitter<number>();

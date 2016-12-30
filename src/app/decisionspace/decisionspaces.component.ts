@@ -40,18 +40,14 @@ export class DecisionspacesComponent {
 
     constructor(
         private decisionspaceService: DecisionspaceService,
-        //private connectionService: ConnectionService,
         private securityService: SecurityService,
         private router: Router,
         private zone:NgZone
     ) {}
 
-    
-
     ngOnInit() {
         const user:User = this.securityService.getCurrentUser();
         this.decisionspaceService.fetchList(user).subscribe(decisionspaces => {
-            console.log("A CHANGE OCCURED");
             this.zone.run( () => this.decisionspaces = decisionspaces );
         });
     }

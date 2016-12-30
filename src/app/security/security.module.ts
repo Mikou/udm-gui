@@ -1,26 +1,22 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule }   from '@angular/forms';
-
-//import { LoginComponent } from './login.component';
-//import { RegisterComponent } from './register.component';
-//import { NotificationModule } from '../notification/notification.module';
-//import { SecurityComponent } from './security.component';
+import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 import { SecurityService } from './security.service';
-//import { SocketFactoryModule } from '../socketFactory/socketFactory.module'
-//import { securityRouting } from './security.routes';
-
+import { securityRouting } from './security.routes';
+import { LoginComponent } from './login.component';
+import { SecurityNavComponent } from './securityNav.component';
 
 @NgModule({
   imports: [ 
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     //SocketFactoryModule,
     //NotificationModule,
-    //securityRouting
-  ],
+    securityRouting
+  ],  
   providers: [ SecurityService ],
-  declarations: [ ],
-  exports: [ ]
+  declarations: [ LoginComponent, SecurityNavComponent ],
+  exports: [ SecurityNavComponent ]
 })
 export class SecurityModule {}

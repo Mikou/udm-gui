@@ -7,20 +7,20 @@ import { WidgetService } from './widget.service';
 import { VisCtrl } from './../../toolbar/visControls/visCtrl.model';
 
 @Component({
-  selector: 'ud2d-widgetlist',
+  selector: 'udm-widgetlist',
     styles: [`
-    udm-widget {
-        display:block;
-        background-color:#fff;
-        padding:10px;
-        margin:10px 0;
-        border:1px solid #ccf;
-    }
+      udm-widget {
+          display:block;
+          background-color:#fff;
+          padding:10px;
+          margin:10px 0;
+          border:1px solid #ccf;
+      }
   `],
   template: `
     <h3>{{title}}</h3>
     <udm-widget
-      *ngFor="let widgetitem of widgetitems" 
+      *ngFor="let widgetitem of widgetitems"
       [item]="widgetitem"
       makeDroppable (dropped)="droppedWidget($event, widgetitem)"
       (deleteWidgetNotify)="onDelete($event)"

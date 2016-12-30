@@ -8,19 +8,18 @@ import { WidgetlistComponent } from './widget/widgetlist.component'
   styles:[`
   .canvas-content {
   }
+  udm-widgetlist {
+    display:block;
+  }
   `],
   template: `
-    <h2>{{title}}</h2>
     <div class='canvas-content' makeDroppable (dropped)="widgetlist.droppedWidget($event)">
-      <ud2d-widgetlist [decisionspaceId]="decisionspaceId" #widgetlist></ud2d-widgetlist>
+      <udm-widgetlist [decisionspaceId]="decisionspaceId" #widgetlist></udm-widgetlist>
     </div>
   `
 })
-
 export class CanvasComponent {
   @Input() decisionspaceId:string
-  
-  title = 'canvas';
 
   constructor() {
   }

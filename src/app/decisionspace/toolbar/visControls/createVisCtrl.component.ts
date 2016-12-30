@@ -1,11 +1,12 @@
-import{ Component, OnInit, Input } from '@angular/core';
-import { ConnectionService } from '../../../socketFactory/connection.service';
-import { SecurityService } from '../../../security/security.service';
-
+import { Component, OnInit, Input } from '@angular/core';
+import { ConnectionService }        from '../../../socketFactory/connection.service';
+import { SecurityService }          from '../../../security/security.service';
+import { VisCtrlService }           from './visCtrl.service';
+import { VisCtrl }                  from './visCtrl.model';
 @Component({
     selector: 'udm-createVisCtrl',
     template: `
-        <h4>create a new visualization control</h4>
+        <h4>Import</h4>
         <p><label for="name">Name</label><input id="name" name="name" type="text" [(ngModel)]="name" /></p>
         <p><label for="url">Url</label><input id="url" name="url" type="text" [(ngModel)]="url" /></p>
         <button (click)="onClick()">Submit</button>
@@ -19,6 +20,7 @@ export class CreateVisCtrlComponent implements OnInit {
     constructor(
         private _securitySvc: SecurityService,
         //private _connectionSvc: ConnectionService
+        private visCtrlService:VisCtrlService
     ) {
     }
 
@@ -27,20 +29,12 @@ export class CreateVisCtrlComponent implements OnInit {
     }
 
     onClick() {
-
-        let visCtrl:any = {
+        let visCtrl:VisCtrl = {
             name: this.name,
             url: this.url,
-            userid: 1
+            type: 'VISCTRL'
         };
-
-        /*this._connectionSvc.call('udm.backend.visCtrlRegistration', [visCtrl]).then((data) => {
-            console.log("data", data);
-            
-        }).catch( (err) => {
-            console.log("ERROR", err);
-        });*/
+        this.visCtrlService.create(visCtrl)
         return Promise.resolve("decision space created");
-
     }
 }
