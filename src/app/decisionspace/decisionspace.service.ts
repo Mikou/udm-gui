@@ -21,9 +21,7 @@ export class DecisionspaceService {
     constructor(
         private connectorService:ConnectorService,
         private zone:NgZone
-    ) {
-
-    }
+    ) {}
 
     fetchList(user:User) {
         this.connectorService.call('udm.backend.decisionspaceList', [user]).then( (decisionspaces:List<DecisionSpace>) => {
@@ -33,15 +31,16 @@ export class DecisionspaceService {
     }
 
     create(decisionspace:DecisionSpace) {
-        return new Promise( resolve => {
-            const list = this._decisionspaces.getValue();
-            decisionspace.id = DECISIONSPACES.length;
-            DECISIONSPACES.push(decisionspace);
-            console.log(DECISIONSPACES);
-            this._decisionspaces.next(List(DECISIONSPACES));
-            resolve();
-        } );
-
+        return new Promise( (resolve, reject) => {
+            this.connectorService.call('udm.backend.decisionspaceRegistration', [decisionspace]).then((data:DecisionSpace) => {
+                const list = this._decisionspaces.getValue();
+                list.push(data);
+                this._decisionspaces.next(List(list));
+                resolve();
+            }).catch( err => {
+                reject(err);
+            });
+        });
     }
 
     getDecisionSpaceInfo(id:number) {
@@ -56,15 +55,10 @@ export class DecisionspaceService {
   
     }
 
-    ngOnInit() {
-        /*this.socketFactoryService.messages.subscribe(msg => {
-          console.log("desicionspace service:", msg);
-        })*/
-    }
+    ngOnInit() {}
 
     updateDecisionspaces(arr:any) {
         console.log(JSON.parse(arr));
-        
     }
 
 }

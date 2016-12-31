@@ -42,17 +42,11 @@ export class CreateDecisionspaceComponent implements OnInit {
         };
 
         this._decisionspaceService.create(decisionspace).then( () => {
+            console.log("created");
             let link = ['/decisionspaces'];
             this.router.navigate(link);
-        }).catch( err => console.log(err) );
+        }).catch( err => console.log("ERR ->", err) );
 
-        /*this._connectionSvc.call('udm.backend.decisionspaceRegistration', [decisionspace]).then((data) => {
-            console.log("data", data);
-            let link = ['/decisionspaces'];
-            this.router.navigate(link);
-        }).catch( (err) => {
-            console.log("ERROR", err);
-        });*/
         return Promise.resolve("decision space created");
 
     }
