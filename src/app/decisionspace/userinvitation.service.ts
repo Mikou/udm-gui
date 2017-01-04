@@ -1,37 +1,32 @@
-import { Injectable } from '@angular/core';
-import { ConnectionService } from '../socketFactory/connection.service';
-
+import { Injectable }       from '@angular/core';
+import { ConnectorService } from '../connector/connector.service';
+import { User }             from '../security/user.model';
+import { DecisionSpace }    from './decisionspace.model';
 @Injectable()
 export class UserinvitationService {
 
     constructor (
-        //private connectionService:ConnectionService,
+        private connectorService:ConnectorService,
     ) {
     }
 
     search(username:string) {
         return new Promise( (resolve, reject) => {
-            reject("Not yet implemented");
-        });
-        /*return new Promise( (resolve, reject) => {
             if(username.length <= 1) {
                 resolve([]); return;
             }
-            this.connectionService.call('udm.backend.searchUsersWithPrefix', [username])
-                .then( users => resolve(users) )
+            this.connectorService.call('udm.backend.searchUsersWithPrefix', [username])
+                .then( (users:User[]) => resolve(users) )
                 .catch( err => reject(err) )
-        });*/
+        });
     }
 
-    invite(username:string) {
+    invite(username:string, decisionspaceId:number, uri:string) {
         return new Promise( (resolve, reject) => {
-            reject("Not yet implemented");
-        });
-        /*return new Promise( (resolve, reject) => {
-            this.connectionService.call('udm.backend.inviteUserWithUsername', [username])
+            this.connectorService.call('udm.backend.inviteUserWithUsername', [username, decisionspaceId, uri])
                 .then( user => resolve(user) )
                 .catch( err => reject(err) );
-        });*/
+        });
     }
 
 }

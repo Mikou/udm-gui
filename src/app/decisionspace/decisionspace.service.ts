@@ -8,7 +8,6 @@ import { DECISIONSPACES }   from './decisionspaces.mock';
 import { User }             from '../security/user.model'
 import { List }             from 'immutable';
 
-
 //http://stackoverflow.com/questions/33675155/creating-and-returning-observable-from-angular-2-service
 
 @Injectable()
@@ -23,8 +22,8 @@ export class DecisionspaceService {
         private zone:NgZone
     ) {}
 
-    fetchList(user:User) {
-        this.connectorService.call('udm.backend.decisionspaceList', [user]).then( (decisionspaces:List<DecisionSpace>) => {
+    getDecisionspaces(loggedInUser:User) {
+        this.connectorService.call('udm.backend.getDecisionspaces', [loggedInUser]).then( (decisionspaces:List<DecisionSpace>) => {
             this._decisionspaces.next(decisionspaces);
         });
         return this.decisionspaces;
@@ -36,7 +35,7 @@ export class DecisionspaceService {
                 const list = this._decisionspaces.getValue();
                 list.push(data);
                 this._decisionspaces.next(List(list));
-                resolve();
+                resolve(data);
             }).catch( err => {
                 reject(err);
             });

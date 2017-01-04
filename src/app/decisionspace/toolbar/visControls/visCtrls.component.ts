@@ -47,7 +47,6 @@ export class VisCtrlsComponent {
   visCtrls:VisCtrl[] = [];
 
   constructor (
-    //private connectionService: ConnectionService,
     private visCtrlService: VisCtrlService,
     private securityService: SecurityService,
     private zone:NgZone
@@ -55,18 +54,7 @@ export class VisCtrlsComponent {
   }
 
   ngOnInit() {
-    this.securityService.selectedUser$.subscribe( (user) => {
-      if(user) {
-        console.log(user);
-
-        if(user.roles.find(name => name == 'admin' )) {
-          console.log("FOUND");
-          this.showCreateForm = true;
-        }
-      }
-
-    });
-
+    this.securityService.loggedInUser$.subscribe( user => this.showCreateForm = this.securityService.hasRole('admin', 'domainexpert') );
     this.visCtrlService.visCtrls.subscribe( (visCtrls) => {
       this.zone.run( () => this.visCtrls = visCtrls.toArray() );
     });

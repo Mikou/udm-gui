@@ -1,11 +1,9 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ToolbarComponent } from './toolbar/toolbar.component'
-import { Router } from '@angular/router';
-//import { SecurityService } from '../security/security.service';
-import { DecisionspaceService } from './decisionspace.service';
-import { Observable } from 'rxjs/Observable';
-import { UserinvitationComponent } from './userinvitation.component'
+import { Component }               from '@angular/core';
+import { ActivatedRoute, Router }  from '@angular/router';
+import { ToolbarComponent }        from './toolbar/toolbar.component';
+import { DecisionspaceService }    from './decisionspace.service';
+import { Observable }              from 'rxjs/Observable';
+import { UserinvitationComponent } from './userinvitation.component';
 
 @Component({
   selector: 'udm-decisionspace',
@@ -13,8 +11,8 @@ import { UserinvitationComponent } from './userinvitation.component'
     <div class="intro">
       <span><strong>{{title}}</strong> | {{description}}</span>
     </div>
-    <udm-inviteuser></udm-inviteuser>
-    <ud2d-canvas [decisionspaceId]="'ds'" [ngClass]="role"></ud2d-canvas>
+    <udm-inviteuser [decisionspaceId]="decisionspaceId"></udm-inviteuser>
+    <udm-canvas [decisionspaceId]="'ds'" [ngClass]="role"></udm-canvas>
   `,
   styles: [`
     .intro {
@@ -56,25 +54,17 @@ export class DecisionspaceComponent {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    //private securityService: SecurityService,
     private _dsService: DecisionspaceService,
   ) {}
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(p => {
+      this.decisionspaceId = p["id"];
       this._dsService.getDecisionSpaceInfo(p["id"]).then( (decisionspace:any) => {
         this.title = decisionspace.name;
         this.description = decisionspace.description;
       });
     });
-
-    /*this.securityService.selectedUser$.subscribe(
-      user => {
-        if(user) {
-          this.role = user.roles.toString();
-        }
-      }
-    )*/
   }
 
   ngOnDestroy() {

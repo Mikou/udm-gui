@@ -1,28 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, Input, Inject } from '@angular/core';
 import { UserinvitationService } from './userinvitation.service';
-
+import { User }             from '../security/user.model';
 import { FormControl, Validators }   from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DecisionSpace } from './decisionspace.model';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
+import { DOCUMENT } from '@angular/platform-browser'
 
 @Component({
     selector: 'udm-inviteuser',
     template: `
         <input type="text" [formControl]="username"><button (click)="inviteUser()">invite user</button>
         <ul>
-            <li *ngFor="let username of usernames" (click)="selectUsername(username)">{{username}}</li>
+            <li *ngFor="let user of users" (click)="selectUsername(user)">{{user.username}}</li>
         </ul>
     `
 })
-export class UserinvitationComponent {
-  usernames:Array<string>;
+export class UserinvitationComponent { 
+  @Input() decisionspaceId:number;
+  users:Array<User>;
   username = new FormControl();
 
   constructor(
-    private userinvitationService:UserinvitationService      
+    private userinvitationService:UserinvitationService,
+    @Inject(DOCUMENT) private document: any    
   ) {
-      this.usernames = new Array<string>();
+      this.users = new Array<User>();
 
       this.username.validator = Validators.compose([
           Validators.minLength(3)
@@ -33,25 +37,25 @@ export class UserinvitationComponent {
         .distinctUntilChanged()
         .map( username => this.userinvitationService.search(username) )
         .subscribe( promise => {
-            this.usernames = new Array<string>();
-            promise.then( (usernames:Array<any>) => {
-                usernames.forEach( user => {
-                    this.usernames.push(user.username);
-                })
+            this.users = new Array<User>();
+            promise.then( (users:Array<User>) => {
+                this.users = users;
             }).catch( err => {
                 console.log(err);
             })
        })
   }
 
-  selectUsername(username) {
-      this.username.setValue(username);
+  selectUsername(user) {
+      this.username.setValue(user.username);
   }
 
   inviteUser() {
+      console.log(this.decisionspaceId);
       if(this.username.valid) {
           console.log(this.username.value);
-          this.userinvitationService.invite(this.username.value)
+          console.log("location ::", this.document.location);
+          this.userinvitationService.invite(this.username.value, this.decisionspaceId, this.document.location.href)
             .then( user => console.log(user) )
             .catch( err => console.log(err) );
       }

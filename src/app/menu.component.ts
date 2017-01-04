@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { ToolbarComponent } from './decisionspace/toolbar/toolbar.component';
+import { Component, OnInit }              from '@angular/core';
+import { ToolbarComponent }               from './decisionspace/toolbar/toolbar.component';
 import { Router, NavigationStart, Event } from '@angular/router';
-import { NotificationComponent } from './notification/notification.component';
-
+import { NotificationComponent }          from './notification/notification.component';
+import {SecurityService}                  from './security/security.service';
 @Component({
     selector: 'udm-menu',
     styles: [`
@@ -10,7 +10,7 @@ import { NotificationComponent } from './notification/notification.component';
     `],
     template: `
         <ul>
-            <li>
+            <li *ngIf="canRegister">
             <a [routerLink]=" ['./register'] ">
                 Add a new user
             </a>
@@ -20,19 +20,25 @@ import { NotificationComponent } from './notification/notification.component';
         <udm-notification></udm-notification>
     `
 })
-export class MenuComponent {
-
+export class MenuComponent implements OnInit {
     displayToolbar:boolean = false
-
-    constructor (private router: Router) {
+    canRegister:boolean;
+    constructor (
+        private securityService:SecurityService,
+        private router: Router
+    ) {
         this.router.events.subscribe((event:Event) => {
             if(event instanceof NavigationStart) {
                 var re = new RegExp("decisionspaces\/detail\/[0-9]");
                 this.displayToolbar = (re.test(event.url));
-
-
             }
         }); 
+    }
+
+    ngOnInit() {
+        this.securityService.loggedInUser$.subscribe( () => {
+            this.canRegister = this.securityService.hasRole('admin');
+        })
     }
 
 }

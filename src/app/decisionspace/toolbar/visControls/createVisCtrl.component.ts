@@ -19,7 +19,6 @@ export class CreateVisCtrlComponent implements OnInit {
 
     constructor(
         private _securitySvc: SecurityService,
-        //private _connectionSvc: ConnectionService
         private visCtrlService:VisCtrlService
     ) {
     }
@@ -34,7 +33,7 @@ export class CreateVisCtrlComponent implements OnInit {
             url: this.url,
             type: 'VISCTRL'
         };
-        this.visCtrlService.create(visCtrl)
+        this.visCtrlService.create(visCtrl);
         return Promise.resolve("decision space created");
     }
 }

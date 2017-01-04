@@ -1,12 +1,10 @@
-import { Component, NgZone }    from '@angular/core';
-import { ActivatedRoute }       from '@angular/router';
-import { DecisionspaceService } from './decisionspace.service'
-import { ConnectionService}     from '../socketFactory/connection.service';
-import { Router }               from '@angular/router';
-import { SecurityService }      from '../security/security.service';
-//import { Guard }                from '../security/guard.decorator';
-import { User }                 from '../security/user.model';
-import { List }                 from 'immutable';
+import { Component, NgZone }      from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DecisionspaceService }   from './decisionspace.service'
+import { ConnectionService}       from '../socketFactory/connection.service';
+import { SecurityService }        from '../security/security.service';
+import { User }                   from '../security/user.model';
+import { List }                   from 'immutable';
 
 //@Guard('admin')
 @Component({
@@ -30,7 +28,7 @@ import { List }                 from 'immutable';
                 [decisionspace]="dspace"
             ></udm-decisionspace-preview>
         </div>
-        <div>
+        <div *ngIf="allowedCreateDecisionspace">
             <button (click)="newDecisionspace()">create a new decision space</button>
         </div>
     `
@@ -38,16 +36,24 @@ import { List }                 from 'immutable';
 export class DecisionspacesComponent {
 
     decisionspaces:List<any>;
+    allowedCreateDecisionspace:boolean;
 
     constructor(
         private activatedRoute: ActivatedRoute,
         private decisionspaceService: DecisionspaceService,
         private securityService: SecurityService,
-        private router: Router,
-        private zone:NgZone
+        private router: Router
     ) {}
 
+    loadDecisionspace(loggedInUser:User) {
+        this.decisionspaceService.getDecisionspaces(loggedInUser).subscribe(decisionspaces => {
+            this.decisionspaces = decisionspaces;
+        });
+    }
+
     ngOnInit() {
+        const loggedInUser:User = this.securityService.getCurrentUser();
+        this.allowedCreateDecisionspace = this.securityService.hasRole('admin', 'domainexpert');
 
         this.activatedRoute.params.subscribe(p => {
             if (p["who"]) {
@@ -55,13 +61,14 @@ export class DecisionspacesComponent {
                     this.zone.run( () => this.decisionspaces = decisionspaces );
                 });*/
             } else {
-                this.decisionspaceService.fetchList(user).subscribe(decisionspaces => {
-                    this.zone.run( () => this.decisionspaces = decisionspaces );
-                });
+                this.loadDecisionspace(loggedInUser);
             }
         });
-        const user:User = this.securityService.getCurrentUser();
 
+        // when logout action is triggered the decision spaces should be reloaded
+        this.securityService.loggedInUser$.subscribe( () => {
+            this.loadDecisionspace(this.securityService.getCurrentUser());
+        })
     }
 
     newDecisionspace() {

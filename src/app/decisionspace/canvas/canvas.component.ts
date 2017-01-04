@@ -4,7 +4,7 @@ import { MakeDroppable } from '../shared/draggable/make-droppable.directive';
 import { WidgetlistComponent } from './widget/widgetlist.component'
 
 @Component({
-  selector: 'ud2d-canvas',
+  selector: 'udm-canvas',
   styles:[`
   .canvas-content {
   }

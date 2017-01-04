@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
     selector: 'udm-securitynav',
     template: `
         <span *ngIf="loggedInuser"><a [routerLink]=" ['./profile']">Welcome, {{loggedInuser.username}}</a></span>
-        <span *ngIf="loggedInuser"><a [routerLink]=" ['./profile']">logout</a></span>
+        <span *ngIf="loggedInuser"><a (click)="logout()">logout</a></span>
         <span *ngIf="!loggedInuser"><a [routerLink]=" ['./login']">login</a></span>
         
 
@@ -22,8 +22,12 @@ export class SecurityNavComponent implements OnInit{
     }
 
     ngOnInit() {
-        this.securityService.selectedUser$.subscribe( user => {
+        this.securityService.loggedInUser$.subscribe( user => {
             this.loggedInuser = user;
         });
+    }
+
+    logout() {
+        this.securityService.userLogout();
     }
 }

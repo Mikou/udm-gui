@@ -29,8 +29,7 @@ export class VisualizationComponent {
         if(this.config) {
             this.visUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(this.config.url);
         } else {
-            console.log("error:", this.config);
-            this.errorMessage = "A problem occured. This visualization cannot be shown";
+            this.errorMessage = "Could not load the visualization";
         }
     }
 }

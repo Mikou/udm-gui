@@ -72,7 +72,7 @@ export class AppComponent {
 
   ngOnInit() {
     console.log('Initial App State', this.appState.state);
-    this.securityService.selectedUser$.subscribe( (user) => {
+    this.securityService.loggedInUser$.subscribe( (user) => {
       console.log(user);
     })
   }
