@@ -1686,7 +1686,7 @@ module.exports = function() { throw new Error("define cannot be used indirect");
 var core_1 = __webpack_require__(0);
 var mock_1 = __webpack_require__(608);
 var BehaviorSubject_1 = __webpack_require__(67);
-var connector_service_1 = __webpack_require__(88);
+var connector_service_1 = __webpack_require__(89);
 var angular_2_local_storage_1 = __webpack_require__(379);
 var SecurityService = (function () {
     function SecurityService(connectorService, localStorageService) {
@@ -1719,7 +1719,6 @@ var SecurityService = (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             _this.connectorService.call('udm.backend.userRegistration', [user]).then(function (registeredUser) {
-                console.log("registeredUser", registeredUser);
                 resolve(registeredUser);
             }).catch(function (err) {
                 reject(err);
@@ -1920,6 +1919,49 @@ function _is(name, key) {
 /* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
+"use strict";
+"use strict";
+var core_1 = __webpack_require__(0);
+var BehaviorSubject_1 = __webpack_require__(67);
+var immutable_1 = __webpack_require__(121);
+var notification_model_1 = __webpack_require__(606);
+var NotificationService = (function () {
+    function NotificationService() {
+        this._messages = new BehaviorSubject_1.BehaviorSubject(immutable_1.List([]));
+        this.messages = this._messages.asObservable();
+    }
+    NotificationService.prototype.notify = function (message, type) {
+        var notification = new notification_model_1.Notification();
+        notification.message = message;
+        notification.date = new Date();
+        /* types =
+            info
+            warning
+            error
+            success
+            (it's a simple string litteral for now)
+        */
+        notification.type = (type) ? type : 'info';
+        var arr = this._messages.getValue().toArray();
+        arr.unshift(notification);
+        this._messages.next(immutable_1.List(arr));
+    };
+    NotificationService.prototype.clear = function () {
+        this._messages.next(immutable_1.List([]));
+    };
+    return NotificationService;
+}());
+NotificationService = __decorate([
+    core_1.Injectable(),
+    __metadata("design:paramtypes", [])
+], NotificationService);
+exports.NotificationService = NotificationService;
+
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(global) {///////////////////////////////////////////////////////////////////////////////
 //
 //  AutobahnJS - http://autobahn.ws, http://wamp.ws
@@ -1947,7 +1989,6 @@ exports.debug = debug;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(39)))
 
 /***/ },
-/* 74 */,
 /* 75 */,
 /* 76 */,
 /* 77 */,
@@ -1961,7 +2002,8 @@ exports.debug = debug;
 /* 85 */,
 /* 86 */,
 /* 87 */,
-/* 88 */
+/* 88 */,
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2020,49 +2062,6 @@ var ConnectorService = (function () {
     return ConnectorService;
 }());
 exports.ConnectorService = ConnectorService;
-
-
-/***/ },
-/* 89 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-"use strict";
-var core_1 = __webpack_require__(0);
-var BehaviorSubject_1 = __webpack_require__(67);
-var immutable_1 = __webpack_require__(120);
-var notification_model_1 = __webpack_require__(606);
-var NotificationService = (function () {
-    function NotificationService() {
-        this._messages = new BehaviorSubject_1.BehaviorSubject(immutable_1.List([]));
-        this.messages = this._messages.asObservable();
-    }
-    NotificationService.prototype.notify = function (message, type) {
-        var notification = new notification_model_1.Notification();
-        notification.message = message;
-        notification.date = new Date();
-        /* types =
-            info
-            warning
-            error
-            success
-            (it's a simple string litteral for now)
-        */
-        notification.type = (type) ? type : 'info';
-        var arr = this._messages.getValue().toArray();
-        arr.unshift(notification);
-        this._messages.next(immutable_1.List(arr));
-    };
-    NotificationService.prototype.clear = function () {
-        this._messages.next(immutable_1.List([]));
-    };
-    return NotificationService;
-}());
-NotificationService = __decorate([
-    core_1.Injectable(),
-    __metadata("design:paramtypes", [])
-], NotificationService);
-exports.NotificationService = NotificationService;
 
 
 /***/ },
@@ -2871,6 +2870,82 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 /* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
+"use strict";
+"use strict";
+var core_1 = __webpack_require__(0);
+var core_2 = __webpack_require__(0);
+var BehaviorSubject_1 = __webpack_require__(67);
+var connector_service_1 = __webpack_require__(89);
+var immutable_1 = __webpack_require__(121);
+//http://stackoverflow.com/questions/33675155/creating-and-returning-observable-from-angular-2-service
+var DecisionspaceService = (function () {
+    function DecisionspaceService(connectorService, zone) {
+        this.connectorService = connectorService;
+        this.zone = zone;
+        this._decisionspaces = new BehaviorSubject_1.BehaviorSubject(immutable_1.List([]));
+        this.decisionspaces = this._decisionspaces.asObservable();
+    }
+    DecisionspaceService.prototype.getDecisionspaces = function (loggedInUser) {
+        var _this = this;
+        this.connectorService.call('udm.backend.getDecisionspaces', [loggedInUser]).then(function (decisionspaces) {
+            _this._decisionspaces.next(decisionspaces);
+        });
+        return this.decisionspaces;
+    };
+    DecisionspaceService.prototype.create = function (decisionspace) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.connectorService.call('udm.backend.decisionspaceRegistration', [decisionspace]).then(function (data) {
+                var list = _this._decisionspaces.getValue();
+                list.push(data);
+                _this._decisionspaces.next(immutable_1.List(list));
+                resolve(data);
+            }).catch(function (err) {
+                reject(err);
+            });
+        });
+    };
+    DecisionspaceService.prototype.getDecisionSpaceInfo = function (id) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            //resolve(DECISIONSPACES[id]);
+            _this.connectorService.call('udm.backend.getDecisionspaceById', [id]).then(function (decisionspace) {
+                resolve(decisionspace);
+            }).catch(function (err) {
+                reject("could not get decision space informations");
+            });
+        });
+    };
+    DecisionspaceService.prototype.checkPermissions = function (userId, decisionspaceId) {
+        var _this = this;
+        console.log(userId, decisionspaceId);
+        return new Promise(function (resolve, reject) {
+            _this.connectorService.call('udm.backend.checkPermissions', [userId, decisionspaceId])
+                .then(function (hasAccess) {
+                console.log(hasAccess);
+                resolve(hasAccess);
+            })
+                .catch(function (err) { return reject(err); });
+        });
+    };
+    DecisionspaceService.prototype.ngOnInit = function () { };
+    DecisionspaceService.prototype.updateDecisionspaces = function (arr) {
+        console.log(JSON.parse(arr));
+    };
+    return DecisionspaceService;
+}());
+DecisionspaceService = __decorate([
+    core_2.Injectable(),
+    __metadata("design:paramtypes", [typeof (_a = typeof connector_service_1.ConnectorService !== "undefined" && connector_service_1.ConnectorService) === "function" && _a || Object, typeof (_b = typeof core_1.NgZone !== "undefined" && core_1.NgZone) === "function" && _b || Object])
+], DecisionspaceService);
+exports.DecisionspaceService = DecisionspaceService;
+var _a, _b;
+
+
+/***/ },
+/* 113 */
+/***/ function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(global) {///////////////////////////////////////////////////////////////////////////////
 //
 //  AutobahnJS - http://autobahn.ws, http://wamp.ws
@@ -2884,7 +2959,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var log = __webpack_require__(73);
+var log = __webpack_require__(74);
 
 var when = __webpack_require__(97);
 
@@ -3082,14 +3157,14 @@ exports.defaults = defaults;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(39)))
 
 /***/ },
-/* 113 */,
 /* 114 */,
 /* 115 */,
 /* 116 */,
 /* 117 */,
 /* 118 */,
 /* 119 */,
-/* 120 */
+/* 120 */,
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 /**
@@ -8073,7 +8148,6 @@ exports.defaults = defaults;
 }));
 
 /***/ },
-/* 121 */,
 /* 122 */,
 /* 123 */,
 /* 124 */,
@@ -8107,70 +8181,7 @@ exports.defaults = defaults;
 /* 152 */,
 /* 153 */,
 /* 154 */,
-/* 155 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-"use strict";
-var core_1 = __webpack_require__(0);
-var core_2 = __webpack_require__(0);
-var BehaviorSubject_1 = __webpack_require__(67);
-var connector_service_1 = __webpack_require__(88);
-var immutable_1 = __webpack_require__(120);
-//http://stackoverflow.com/questions/33675155/creating-and-returning-observable-from-angular-2-service
-var DecisionspaceService = (function () {
-    function DecisionspaceService(connectorService, zone) {
-        this.connectorService = connectorService;
-        this.zone = zone;
-        this._decisionspaces = new BehaviorSubject_1.BehaviorSubject(immutable_1.List([]));
-        this.decisionspaces = this._decisionspaces.asObservable();
-    }
-    DecisionspaceService.prototype.getDecisionspaces = function (loggedInUser) {
-        var _this = this;
-        this.connectorService.call('udm.backend.getDecisionspaces', [loggedInUser]).then(function (decisionspaces) {
-            _this._decisionspaces.next(decisionspaces);
-        });
-        return this.decisionspaces;
-    };
-    DecisionspaceService.prototype.create = function (decisionspace) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            _this.connectorService.call('udm.backend.decisionspaceRegistration', [decisionspace]).then(function (data) {
-                var list = _this._decisionspaces.getValue();
-                list.push(data);
-                _this._decisionspaces.next(immutable_1.List(list));
-                resolve(data);
-            }).catch(function (err) {
-                reject(err);
-            });
-        });
-    };
-    DecisionspaceService.prototype.getDecisionSpaceInfo = function (id) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            //resolve(DECISIONSPACES[id]);
-            _this.connectorService.call('udm.backend.getDecisionspaceById', [id]).then(function (decisionspace) {
-                resolve(decisionspace);
-            }).catch(function (err) {
-                reject("could not get decision space informations");
-            });
-        });
-    };
-    DecisionspaceService.prototype.ngOnInit = function () { };
-    DecisionspaceService.prototype.updateDecisionspaces = function (arr) {
-        console.log(JSON.parse(arr));
-    };
-    return DecisionspaceService;
-}());
-DecisionspaceService = __decorate([
-    core_2.Injectable(),
-    __metadata("design:paramtypes", [typeof (_a = typeof connector_service_1.ConnectorService !== "undefined" && connector_service_1.ConnectorService) === "function" && _a || Object, typeof (_b = typeof core_1.NgZone !== "undefined" && core_1.NgZone) === "function" && _b || Object])
-], DecisionspaceService);
-exports.DecisionspaceService = DecisionspaceService;
-var _a, _b;
-
-
-/***/ },
+/* 155 */,
 /* 156 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -8202,7 +8213,7 @@ exports.DraggableModule = DraggableModule;
 "use strict";
 var core_1 = __webpack_require__(0);
 var platform_browser_1 = __webpack_require__(18);
-var forms_1 = __webpack_require__(26);
+var forms_1 = __webpack_require__(24);
 var security_service_1 = __webpack_require__(29);
 var security_routes_1 = __webpack_require__(610);
 var login_component_1 = __webpack_require__(377);
@@ -9134,8 +9145,8 @@ exports.AppState = AppState;
 "use strict";
 var core_1 = __webpack_require__(0);
 var BehaviorSubject_1 = __webpack_require__(67);
-var connector_service_1 = __webpack_require__(88);
-var immutable_1 = __webpack_require__(120);
+var connector_service_1 = __webpack_require__(89);
+var immutable_1 = __webpack_require__(121);
 //http://stackoverflow.com/questions/33675155/creating-and-returning-observable-from-angular-2-service
 var VisCtrlService = (function () {
     function VisCtrlService(connectorService) {
@@ -9151,11 +9162,20 @@ var VisCtrlService = (function () {
             console.log(err);
         });
     }
-    VisCtrlService.prototype.create = function (visCtrl) {
-        /*let list:List<VisCtrl>  = this._visCtrls.getValue();
-        let arr:Array<VisCtrl> = list.toArray();
-        arr.push(visCtrl);
-        this._visCtrls.next(List(arr)   );*/
+    VisCtrlService.prototype.create = function (visCtrl, userId) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.connectorService.call('udm.backend.createVisCtrl', [visCtrl, userId]).then(function (res) {
+                var list = _this._visCtrls.getValue();
+                var arr = list.toArray();
+                arr.push(visCtrl);
+                _this._visCtrls.next(immutable_1.List(arr));
+                resolve(res);
+            }).catch(function (err) {
+                console.log(err);
+                reject(err);
+            });
+        });
     };
     return VisCtrlService;
 }());
@@ -11852,6 +11872,7 @@ __export(__webpack_require__(573));
 "use strict";
 var core_1 = __webpack_require__(0);
 var security_service_1 = __webpack_require__(29);
+var decisionspace_service_1 = __webpack_require__(112);
 var UserToken = (function () {
     function UserToken() {
     }
@@ -11862,30 +11883,34 @@ var Permissions = (function () {
     function Permissions() {
     }
     Permissions.prototype.decisionspace = function (user, id) {
-        console.log(user);
         return false;
     };
     Permissions.prototype.adminTasks = function (user) {
-        console.log(user);
-        console.log("ADMIN PERMISSION");
         return false;
     };
     return Permissions;
 }());
 exports.Permissions = Permissions;
 var CanActivateDecisionspace = (function () {
-    function CanActivateDecisionspace(permissions, securityService) {
+    function CanActivateDecisionspace(permissions, securityService, decisionspaceService) {
         this.permissions = permissions;
         this.securityService = securityService;
+        this.decisionspaceService = decisionspaceService;
     }
     CanActivateDecisionspace.prototype.canActivate = function (route, state) {
-        return this.securityService.hasRole('domainexpert');
+        if (this.securityService.hasRole('admin' || 'domainexpert')) {
+            return true;
+        }
+        else {
+            var userId = (this.securityService.getCurrentUser()) ? this.securityService.getCurrentUser().id : null;
+            return this.decisionspaceService.checkPermissions(userId, parseInt(route.params['id']));
+        }
     };
     return CanActivateDecisionspace;
 }());
 CanActivateDecisionspace = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [Permissions, typeof (_a = typeof security_service_1.SecurityService !== "undefined" && security_service_1.SecurityService) === "function" && _a || Object])
+    __metadata("design:paramtypes", [Permissions, typeof (_a = typeof security_service_1.SecurityService !== "undefined" && security_service_1.SecurityService) === "function" && _a || Object, typeof (_b = typeof decisionspace_service_1.DecisionspaceService !== "undefined" && decisionspace_service_1.DecisionspaceService) === "function" && _b || Object])
 ], CanActivateDecisionspace);
 exports.CanActivateDecisionspace = CanActivateDecisionspace;
 var CanActivateAdminTeam = (function () {
@@ -11901,10 +11926,10 @@ var CanActivateAdminTeam = (function () {
 }());
 CanActivateAdminTeam = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [Permissions, typeof (_b = typeof security_service_1.SecurityService !== "undefined" && security_service_1.SecurityService) === "function" && _b || Object])
+    __metadata("design:paramtypes", [Permissions, typeof (_c = typeof security_service_1.SecurityService !== "undefined" && security_service_1.SecurityService) === "function" && _c || Object])
 ], CanActivateAdminTeam);
 exports.CanActivateAdminTeam = CanActivateAdminTeam;
-var _a, _b;
+var _a, _b, _c;
 
 
 /***/ },
@@ -11914,8 +11939,8 @@ var _a, _b;
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var connector_service_1 = __webpack_require__(88);
-var notification_service_1 = __webpack_require__(89);
+var connector_service_1 = __webpack_require__(89);
+var notification_service_1 = __webpack_require__(73);
 var autobahn = __webpack_require__(381);
 var ConnectionTestComponent = (function () {
     function ConnectionTestComponent(connectorService, notificationService) {
@@ -11966,8 +11991,8 @@ var _a, _b;
 "use strict";
 var core_1 = __webpack_require__(0);
 var platform_browser_1 = __webpack_require__(18);
-var forms_1 = __webpack_require__(26);
-var connector_service_1 = __webpack_require__(88);
+var forms_1 = __webpack_require__(24);
+var connector_service_1 = __webpack_require__(89);
 var ConnectorModule = (function () {
     function ConnectorModule() {
     }
@@ -12079,7 +12104,7 @@ var _a;
 var core_1 = __webpack_require__(0);
 var mock_widgets_1 = __webpack_require__(580);
 var BehaviorSubject_1 = __webpack_require__(67);
-var immutable_1 = __webpack_require__(120);
+var immutable_1 = __webpack_require__(121);
 //import { ConnectionService } from '../../../socketFactory/connection.service'
 var WidgetService = (function () {
     function WidgetService() {
@@ -12127,10 +12152,10 @@ exports.WidgetService = WidgetService;
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var forms_1 = __webpack_require__(26);
+var forms_1 = __webpack_require__(24);
 var router_1 = __webpack_require__(36);
-var decisionspace_service_1 = __webpack_require__(155);
-var notification_service_1 = __webpack_require__(89);
+var decisionspace_service_1 = __webpack_require__(112);
+var notification_service_1 = __webpack_require__(73);
 var security_service_1 = __webpack_require__(29);
 var CreateDecisionspaceComponent = (function () {
     function CreateDecisionspaceComponent(_decisionspaceService, notificationService, securityService, router) {
@@ -12188,7 +12213,7 @@ var _a, _b, _c, _d;
 "use strict";
 var core_1 = __webpack_require__(0);
 var router_1 = __webpack_require__(36);
-var decisionspace_service_1 = __webpack_require__(155);
+var decisionspace_service_1 = __webpack_require__(112);
 var DecisionspaceComponent = (function () {
     function DecisionspaceComponent(activatedRoute, _dsService) {
         this.activatedRoute = activatedRoute;
@@ -12212,8 +12237,8 @@ var DecisionspaceComponent = (function () {
 DecisionspaceComponent = __decorate([
     core_1.Component({
         selector: 'udm-decisionspace',
-        template: "\n    <div class=\"intro\">\n      <span><strong>{{title}}</strong> | {{description}}</span>\n    </div>\n    <udm-inviteuser [decisionspaceId]=\"decisionspaceId\"></udm-inviteuser>\n    <udm-canvas [decisionspaceId]=\"'ds'\" [ngClass]=\"role\"></udm-canvas>\n  ",
-        styles: ["\n    .intro {\n      color:#fff;\n      padding:1px 5px;\n      background-color:lightslategray;\n    }\n    udm-inviteuser {\n      float:right;\n    }\n    #content {\n      background-color:#eee;\n      padding:10px;\n    }\n    ud2d-toolbar {\n      padding:0 10px;\n      width: 200px; float: left; height: 200px;\n      height:100%;\n      background-color:#fff;\n    }\n    ud2d-canvas {\n      width: 500px;\n      margin: 0 auto;\n      height:100%;\n      background-color:#fff;\n    }\n    ud2d-canvas.admin {\n      padding:0 10px;\n      margin: 0 -250px 0 auto;\n    }\n  "]
+        template: "\n    <div class=\"intro\">\n      <span><strong>{{title}}</strong> | {{description}}</span>\n    </div>\n    <div>\n      <p class=\"note\">!!! Note: The drag-and-drop support and interaction with the elements in the decisionspace are still very buggy !!!</p>\n    <div>\n    <udm-inviteuser [decisionspaceId]=\"decisionspaceId\"></udm-inviteuser>\n\n    <udm-canvas [decisionspaceId]=\"'ds'\" [ngClass]=\"role\"></udm-canvas>\n  ",
+        styles: ["\n    .intro {\n      color:#fff;\n      padding:1px 5px;\n      background-color:lightslategray;\n    }\n    .note {\n      padding:5px;\n      color:#fff;\n      background-color:#800;\n    }\n    udm-inviteuser {\n      float:right;\n    }\n    #content {\n      background-color:#eee;\n      padding:10px;\n    }\n    ud2d-toolbar {\n      padding:0 10px;\n      width: 200px; float: left; height: 200px;\n      height:100%;\n      background-color:#fff;\n    }\n    ud2d-canvas {\n      width: 500px;\n      margin: 0 auto;\n      height:100%;\n      background-color:#fff;\n    }\n    ud2d-canvas.admin {\n      padding:0 10px;\n      margin: 0 -250px 0 auto;\n    }\n  "]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof router_1.ActivatedRoute !== "undefined" && router_1.ActivatedRoute) === "function" && _a || Object, typeof (_b = typeof decisionspace_service_1.DecisionspaceService !== "undefined" && decisionspace_service_1.DecisionspaceService) === "function" && _b || Object])
 ], DecisionspaceComponent);
@@ -12229,7 +12254,7 @@ var _a, _b;
 "use strict";
 var core_1 = __webpack_require__(0);
 var router_1 = __webpack_require__(36);
-var decisionspace_service_1 = __webpack_require__(155);
+var decisionspace_service_1 = __webpack_require__(112);
 var security_service_1 = __webpack_require__(29);
 //@Guard('admin')
 var DecisionspacesComponent = (function () {
@@ -12259,6 +12284,7 @@ var DecisionspacesComponent = (function () {
         // when logout action is triggered the decision spaces should be reloaded
         this.securityService.loggedInUser$.subscribe(function () {
             _this.loadDecisionspace(_this.securityService.getCurrentUser());
+            _this.allowedCreateDecisionspace = _this.securityService.hasRole('admin', 'domainexpert');
         });
     };
     DecisionspacesComponent.prototype.newDecisionspace = function () {
@@ -12316,7 +12342,7 @@ exports.ToolbarModule = ToolbarModule;
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var connector_service_1 = __webpack_require__(88);
+var connector_service_1 = __webpack_require__(89);
 var UserinvitationService = (function () {
     function UserinvitationService(connectorService) {
         this.connectorService = connectorService;
@@ -12408,8 +12434,8 @@ var _a;
 "use strict";
 var core_1 = __webpack_require__(0);
 var security_service_1 = __webpack_require__(29);
-var notification_service_1 = __webpack_require__(89);
-var forms_1 = __webpack_require__(26);
+var notification_service_1 = __webpack_require__(73);
+var forms_1 = __webpack_require__(24);
 var LoginComponent = (function () {
     function LoginComponent(_securitySvc, _notificationSvc) {
         this._securitySvc = _securitySvc;
@@ -12450,21 +12476,26 @@ var _a, _b;
 "use strict";
 var core_1 = __webpack_require__(0);
 var security_service_1 = __webpack_require__(29);
-var notification_service_1 = __webpack_require__(89);
-var forms_1 = __webpack_require__(26);
+var notification_service_1 = __webpack_require__(73);
+var forms_1 = __webpack_require__(24);
 var passwordConfirm_validator_1 = __webpack_require__(609);
 var RegisterComponent = (function () {
     function RegisterComponent(_securitySvc, _notificationSvc) {
         this._securitySvc = _securitySvc;
         this._notificationSvc = _notificationSvc;
+        this.roles = [
+            { value: 'admin', checked: false, display: 'admin' },
+            { value: 'domainexpert', checked: false, display: 'domain expert' },
+            { value: 'planner', checked: true, display: 'planner' }
+        ];
     }
     RegisterComponent.prototype.ngOnInit = function () {
         this.user = new forms_1.FormGroup({
-            name: new forms_1.FormControl('', [forms_1.Validators.required, forms_1.Validators.minLength(2)]),
+            username: new forms_1.FormControl('', [forms_1.Validators.required, forms_1.Validators.minLength(3)]),
             email: new forms_1.FormControl('', [forms_1.Validators.required, forms_1.Validators.minLength(6), forms_1.Validators.pattern("^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$")]),
             password: new forms_1.FormControl('', [forms_1.Validators.minLength(6)]),
             passwordConfirm: new forms_1.FormControl('', [passwordConfirm_validator_1.PasswordConfirmValidator.equalsPassword]),
-            role: new forms_1.FormControl(''),
+            roles: new forms_1.FormControl(this.roles.filter(function (n) { return n["checked"]; }).map(function (n) { return n["value"]; }), [forms_1.Validators.required]),
             firstname: new forms_1.FormControl(''),
             lastname: new forms_1.FormControl('')
         });
@@ -12476,19 +12507,32 @@ var RegisterComponent = (function () {
         if (valid) {
             this._securitySvc.userRegistration(value).then(function (user) {
                 console.log("user: ", user);
+                _this._notificationSvc.notify('User ' + user["username"] + ' was created. An email has been sent to him/her.', 'success');
             }).catch(function (err) { return _this._notificationSvc.notify(err, 'error'); });
         }
         else {
-            console.log("invalid");
-            console.log(this.user.errors);
+            this._notificationSvc.notify('Cannot register user. Form data is invalid', 'error');
         }
+    };
+    RegisterComponent.prototype.updateRoles = function (e) {
+        var isChecked = e.target["checked"];
+        var formControl = this.user.get('roles');
+        var roles = (formControl.value === null) ? [] : formControl.value;
+        if (isChecked) {
+            roles.push(e.target['value']);
+        }
+        else {
+            var index = roles.indexOf(e.target['value']);
+            roles.splice(index, 1);
+        }
+        formControl.setValue(roles.length < 1 ? null : roles);
     };
     return RegisterComponent;
 }());
 RegisterComponent = __decorate([
     core_1.Component({
-        selector: 'ud2d-register',
-        template: "\n        <h2>user registration</h2>\n        <form (ngSubmit)=\"onSubmit(user)\" [formGroup]=\"user\">\n            <p><label for=\"login\">Name</label><input id=\"login\" name=\"login\" type=\"text\" formControlName=\"name\" /></p>\n            <p><label for=\"email\">Email</label><input id=\"email\" name=\"email\" type=\"email\" formControlName=\"email\" /></p>\n            <p><label for=\"psswd\">Password</label><input id=\"psswd\" name=\"psswd\" type=\"password\" formControlName=\"password\" /></p>\n            <p><label for=\"pwdConfirm\">Confirm Password</label><input id=\"pwdConfirm\" name=\"pwdConfirm\" type=\"password\" formControlName=\"passwordConfirm\" /></p>\n            <p><input type=\"radio\" formControlName=\"role\" name=\"role\" value=\"admin\">Admin</p>\n            <p><input type=\"radio\" formControlName=\"role\" name=\"role\" value=\"domainexpert\">Domain Expert<br></p>\n            <p><input type=\"radio\" formControlName=\"role\" name=\"role\" value=\"planner\">Planner</p>\n            <br>\n            <p><label for=\"firstname\">Firstname</label><input id=\"firstname\" name=\"firstname\" type=\"text\" formControlName=\"firstname\" /></p>\n            <p><label for=\"lastname\">Lastname</label><input id=\"lastname\" name=\"lastname\" type=\"text\" formControlName=\"lastname\" /></p>\n            <button type=\"submit\" [disabled]=\"user.invalid\">Register</button>\n        </form>\n      "
+        selector: 'udm-register',
+        template: "\n        <h2>user registration</h2>\n        <form (ngSubmit)=\"onSubmit(user)\" [formGroup]=\"user\">\n            <p><label for=\"login\">Name</label><input id=\"login\" name=\"login\" type=\"text\" formControlName=\"username\" /></p>\n            <p><label for=\"email\">Email</label><input id=\"email\" name=\"email\" type=\"email\" formControlName=\"email\" /></p>\n            <p><label for=\"psswd\">Password</label><input id=\"psswd\" name=\"psswd\" type=\"password\" formControlName=\"password\" /></p>\n            <p><label for=\"pwdConfirm\">Confirm Password</label><input id=\"pwdConfirm\" name=\"pwdConfirm\" type=\"password\" formControlName=\"passwordConfirm\" /></p>\n            <input type=\"hidden\" name=\"toggle\" formControlName=\"roles\">\n            <p><input type=\"checkbox\" name=\"role\" value=\"{{roles[0].value}}\"\n                [checked]=\"roles[0].checked\"\n                (change)=\"updateRoles($event)\">\n            {{roles[0].display}}</p>\n            <p><input type=\"checkbox\" name=\"role\" value=\"{{roles[1].value}}\"\n                [checked]=\"roles[1].checked\"\n                (change)=\"updateRoles($event)\"\n            >{{roles[1].display}}<br></p>\n            <p><input type=\"checkbox\" name=\"role\" value=\"{{roles[2].value}}\"\n                [checked]=\"roles[2].checked\"\n                (change)=\"updateRoles($event)\"\n            >{{roles[2].display}}</p>\n            <br>\n            <p><label for=\"firstname\">Firstname</label><input id=\"firstname\" name=\"firstname\" type=\"text\" formControlName=\"firstname\" /></p>\n            <p><label for=\"lastname\">Lastname</label><input id=\"lastname\" name=\"lastname\" type=\"text\" formControlName=\"lastname\" /></p>\n            <button type=\"submit\" [disabled]=\"user.invalid\">Register</button>\n        </form>\n      "
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof security_service_1.SecurityService !== "undefined" && security_service_1.SecurityService) === "function" && _a || Object, typeof (_b = typeof notification_service_1.NotificationService !== "undefined" && notification_service_1.NotificationService) === "function" && _b || Object])
 ], RegisterComponent);
@@ -12814,8 +12858,8 @@ if ('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG) {
    }
 }
 
-var util = __webpack_require__(112);
-var log = __webpack_require__(73);
+var util = __webpack_require__(113);
+var log = __webpack_require__(74);
 var session = __webpack_require__(384);
 var connection = __webpack_require__(617);
 var configure = __webpack_require__(616);
@@ -12869,7 +12913,7 @@ exports.log = log;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var log = __webpack_require__(73);
+var log = __webpack_require__(74);
 var msgpack = __webpack_require__(260);
 
 function JSONSerializer(replacer, reviver) {
@@ -12954,8 +12998,8 @@ exports.MsgpackSerializer = MsgpackSerializer;
 var when = __webpack_require__(97);
 var when_fn = __webpack_require__(446);
 
-var log = __webpack_require__(73);
-var util = __webpack_require__(112);
+var log = __webpack_require__(74);
+var util = __webpack_require__(113);
 
 // this is needed for correct msgpack serialization of WAMP session IDs
 var Uint64BE = __webpack_require__(169).Uint64BE;
@@ -15789,7 +15833,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Subject_1 = __webpack_require__(95);
 var Observable_1 = __webpack_require__(7);
 var Subscriber_1 = __webpack_require__(22);
-var Subscription_1 = __webpack_require__(121);
+var Subscription_1 = __webpack_require__(122);
 /**
  * @class ConnectableObservable<T>
  */
@@ -20064,10 +20108,10 @@ var _a, _b;
 "use strict";
 var core_1 = __webpack_require__(0);
 var platform_browser_1 = __webpack_require__(18);
-var forms_1 = __webpack_require__(26);
+var forms_1 = __webpack_require__(24);
 var http_1 = __webpack_require__(174);
 var router_1 = __webpack_require__(36);
-var hmr_1 = __webpack_require__(123);
+var hmr_1 = __webpack_require__(124);
 var decisionspace_module_1 = __webpack_require__(585);
 var toolbar_module_1 = __webpack_require__(372);
 var connector_module_1 = __webpack_require__(364);
@@ -20587,8 +20631,8 @@ __decorate([
 DecisionspacePreviewComponent = __decorate([
     core_1.Component({
         selector: 'udm-decisionspace-preview',
-        styles: ["\n            button: {\n                float:right;\n            }\n    "],
-        template: "\n        <h3>{{decisionspace.name}}</h3>\n        <p>{{decisionspace.description}}</p>\n        <button (click)=\"onClick(decisionspace)\">join</button>\n        "
+        styles: ["\n            button: {\n                float:right;\n            }\n            .publicationstate {\n                float:right;\n            }\n    "],
+        template: "\n        <i *ngIf=\"!decisionspace.published\" class=\"publicationstate fa fa-lock\"></i>\n        <h3>{{decisionspace.name}}</h3>\n        <p>{{decisionspace.description}}</p>\n        <button (click)=\"onClick(decisionspace)\">join</button>\n        "
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof router_1.Router !== "undefined" && router_1.Router) === "function" && _a || Object])
 ], DecisionspacePreviewComponent);
@@ -20604,15 +20648,15 @@ var _a;
 "use strict";
 var core_1 = __webpack_require__(0);
 var platform_browser_1 = __webpack_require__(18);
-var forms_1 = __webpack_require__(26);
-var forms_2 = __webpack_require__(26);
+var forms_1 = __webpack_require__(24);
+var forms_2 = __webpack_require__(24);
 var decisionspace_component_1 = __webpack_require__(370);
 var decisionspace_prev_component_1 = __webpack_require__(584);
 var createdecisionspace_component_1 = __webpack_require__(369);
 var decisionspaces_component_1 = __webpack_require__(371);
 var toolbar_module_1 = __webpack_require__(372);
 var canvas_module_1 = __webpack_require__(579);
-var decisionspace_service_1 = __webpack_require__(155);
+var decisionspace_service_1 = __webpack_require__(112);
 var userinvitation_component_1 = __webpack_require__(596);
 var userinvitation_service_1 = __webpack_require__(373);
 var security_module_1 = __webpack_require__(157);
@@ -20886,20 +20930,26 @@ exports.ToolbarComponent = ToolbarComponent;
 var core_1 = __webpack_require__(0);
 var security_service_1 = __webpack_require__(29);
 var visCtrl_service_1 = __webpack_require__(234);
+var forms_1 = __webpack_require__(24);
+var notification_service_1 = __webpack_require__(73);
 var CreateVisCtrlComponent = (function () {
-    function CreateVisCtrlComponent(_securitySvc, visCtrlService) {
+    function CreateVisCtrlComponent(_securitySvc, visCtrlService, notificationService) {
         this._securitySvc = _securitySvc;
         this.visCtrlService = visCtrlService;
+        this.notificationService = notificationService;
     }
     CreateVisCtrlComponent.prototype.ngOnInit = function () {
+        this.visCtrl = new forms_1.FormGroup({
+            name: new forms_1.FormControl('', [forms_1.Validators.minLength(3)]),
+            url: new forms_1.FormControl('', [])
+        });
     };
-    CreateVisCtrlComponent.prototype.onClick = function () {
-        var visCtrl = {
-            name: this.name,
-            url: this.url,
-            type: 'VISCTRL'
-        };
-        this.visCtrlService.create(visCtrl);
+    CreateVisCtrlComponent.prototype.onSubmit = function (_a) {
+        var _this = this;
+        var value = _a.value, valid = _a.valid;
+        this.visCtrlService.create(value, this._securitySvc.getCurrentUser().id).then(function (visCtrl) {
+            _this.notificationService.notify("The visualization control with name " + name + " was created");
+        }).catch(function (err) { return _this.notificationService.notify("Could not create the visualization control"); });
         return Promise.resolve("decision space created");
     };
     return CreateVisCtrlComponent;
@@ -20907,12 +20957,12 @@ var CreateVisCtrlComponent = (function () {
 CreateVisCtrlComponent = __decorate([
     core_1.Component({
         selector: 'udm-createVisCtrl',
-        template: "\n        <h4>Import</h4>\n        <p><label for=\"name\">Name</label><input id=\"name\" name=\"name\" type=\"text\" [(ngModel)]=\"name\" /></p>\n        <p><label for=\"url\">Url</label><input id=\"url\" name=\"url\" type=\"text\" [(ngModel)]=\"url\" /></p>\n        <button (click)=\"onClick()\">Submit</button>\n      "
+        template: "\n        <h4>Import</h4>\n        <form (ngSubmit)=\"onSubmit(visCtrl)\" [formGroup]=\"visCtrl\">\n            <p><label for=\"name\">Name</label><input id=\"name\" name=\"name\" type=\"text\" formControlName=\"name\" /></p>\n            <p><label for=\"url\">Url</label><input id=\"url\" name=\"url\" type=\"text\" formControlName=\"url\" /></p>\n            <button type=\"submit\" [disabled]=\"visCtrl.invalid\">Submit</button>\n        </form>\n      "
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof security_service_1.SecurityService !== "undefined" && security_service_1.SecurityService) === "function" && _a || Object, typeof (_b = typeof visCtrl_service_1.VisCtrlService !== "undefined" && visCtrl_service_1.VisCtrlService) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof security_service_1.SecurityService !== "undefined" && security_service_1.SecurityService) === "function" && _a || Object, typeof (_b = typeof visCtrl_service_1.VisCtrlService !== "undefined" && visCtrl_service_1.VisCtrlService) === "function" && _b || Object, typeof (_c = typeof notification_service_1.NotificationService !== "undefined" && notification_service_1.NotificationService) === "function" && _c || Object])
 ], CreateVisCtrlComponent);
 exports.CreateVisCtrlComponent = CreateVisCtrlComponent;
-var _a, _b;
+var _a, _b, _c;
 
 
 /***/ },
@@ -20955,7 +21005,7 @@ var visCtrls_component_1 = __webpack_require__(595);
 var visCtrl_component_1 = __webpack_require__(593);
 var visCtrl_service_1 = __webpack_require__(234);
 var createVisCtrl_component_1 = __webpack_require__(592);
-var forms_1 = __webpack_require__(26);
+var forms_1 = __webpack_require__(24);
 var VisCtrlModule = (function () {
     function VisCtrlModule() {
     }
@@ -20963,7 +21013,7 @@ var VisCtrlModule = (function () {
 }());
 VisCtrlModule = __decorate([
     core_1.NgModule({
-        imports: [platform_browser_1.BrowserModule, draggable_module_1.DraggableModule, forms_1.FormsModule],
+        imports: [platform_browser_1.BrowserModule, draggable_module_1.DraggableModule, forms_1.FormsModule, forms_1.ReactiveFormsModule],
         declarations: [visCtrls_component_1.VisCtrlsComponent, visCtrl_component_1.VisCtrlComponent, createVisCtrl_component_1.CreateVisCtrlComponent],
         providers: [visCtrl_service_1.VisCtrlService],
         exports: [visCtrls_component_1.VisCtrlsComponent]
@@ -21022,7 +21072,7 @@ var _a, _b, _c;
 "use strict";
 var core_1 = __webpack_require__(0);
 var userinvitation_service_1 = __webpack_require__(373);
-var forms_1 = __webpack_require__(26);
+var forms_1 = __webpack_require__(24);
 __webpack_require__(819);
 __webpack_require__(820);
 var platform_browser_1 = __webpack_require__(18);
@@ -21262,7 +21312,8 @@ var MenuComponent = (function () {
     }
     MenuComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.securityService.loggedInUser$.subscribe(function () {
+        this.securityService.loggedInUser$.subscribe(function (user) {
+            console.log("->", user);
             _this.canRegister = _this.securityService.hasRole('admin');
         });
     };
@@ -21309,8 +21360,8 @@ exports.NoContentComponent = NoContentComponent;
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var notification_service_1 = __webpack_require__(89);
-var immutable_1 = __webpack_require__(120);
+var notification_service_1 = __webpack_require__(73);
+var immutable_1 = __webpack_require__(121);
 var NotificationComponent = (function () {
     function NotificationComponent(_notificationSvc, zone) {
         this._notificationSvc = _notificationSvc;
@@ -21363,9 +21414,9 @@ exports.Notification = Notification;
 "use strict";
 var core_1 = __webpack_require__(0);
 var platform_browser_1 = __webpack_require__(18);
-var forms_1 = __webpack_require__(26);
+var forms_1 = __webpack_require__(24);
 var notification_component_1 = __webpack_require__(605);
-var notification_service_1 = __webpack_require__(89);
+var notification_service_1 = __webpack_require__(73);
 var NotificationModule = (function () {
     function NotificationModule() {
     }
@@ -21705,8 +21756,8 @@ exports.transports = _transports;
 var when = __webpack_require__(97);
 
 var session = __webpack_require__(384);
-var util = __webpack_require__(112);
-var log = __webpack_require__(73);
+var util = __webpack_require__(113);
+var log = __webpack_require__(74);
 var autobahn = __webpack_require__(382);
 
 
@@ -21716,7 +21767,7 @@ var Connection = function (options) {
 
    self._options = options;
 
-   console.log(options);
+
    // Deferred factory
    //
    if (options && options.use_es6_promises) {
@@ -24202,8 +24253,8 @@ if (typeof window !== "undefined") {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var util = __webpack_require__(112);
-var log = __webpack_require__(73);
+var util = __webpack_require__(113);
+var log = __webpack_require__(74);
 
 var when = __webpack_require__(97);
 
@@ -24413,8 +24464,8 @@ exports.Factory = Factory;
 ///////////////////////////////////////////////////////////////////////////////
 
 
-var util = __webpack_require__(112);
-var log = __webpack_require__(73);
+var util = __webpack_require__(113);
+var log = __webpack_require__(74);
 var serializer = __webpack_require__(383);
 
 function Factory (options) {
@@ -28337,18 +28388,18 @@ module.exports = {
 	"_args": [
 		[
 			{
-				"raw": "autobahn",
+				"raw": "autobahn@^0.11.1",
 				"scope": null,
 				"escapedName": "autobahn",
 				"name": "autobahn",
-				"rawSpec": "",
-				"spec": "latest",
-				"type": "tag"
+				"rawSpec": "^0.11.1",
+				"spec": ">=0.11.1 <0.12.0",
+				"type": "range"
 			},
 			"/home/mekoo/Documents/ud2d/udm/udm-gui"
 		]
 	],
-	"_from": "autobahn@latest",
+	"_from": "autobahn@>=0.11.1 <0.12.0",
 	"_id": "autobahn@0.11.1",
 	"_inCache": true,
 	"_installable": true,
@@ -28363,27 +28414,23 @@ module.exports = {
 		"email": "tobias.oberstein@tavendo.de"
 	},
 	"_npmVersion": "3.5.2",
-	"_phantomChildren": {
-		"options": "0.0.6",
-		"ultron": "1.0.2"
-	},
+	"_phantomChildren": {},
 	"_requested": {
-		"raw": "autobahn",
+		"raw": "autobahn@^0.11.1",
 		"scope": null,
 		"escapedName": "autobahn",
 		"name": "autobahn",
-		"rawSpec": "",
-		"spec": "latest",
-		"type": "tag"
+		"rawSpec": "^0.11.1",
+		"spec": ">=0.11.1 <0.12.0",
+		"type": "range"
 	},
 	"_requiredBy": [
-		"#USER",
 		"/"
 	],
 	"_resolved": "https://registry.npmjs.org/autobahn/-/autobahn-0.11.1.tgz",
 	"_shasum": "8b1526cac8ceb9f3a37a42ae9a06138f85dbf6b1",
 	"_shrinkwrap": null,
-	"_spec": "autobahn",
+	"_spec": "autobahn@^0.11.1",
 	"_where": "/home/mekoo/Documents/ud2d/udm/udm-gui",
 	"author": {
 		"name": "Crossbar.io Technologies GmbH"
@@ -29780,7 +29827,7 @@ exports.Scheduler = Scheduler;
 "use strict";
 "use strict";
 var Observable_1 = __webpack_require__(7);
-var of_1 = __webpack_require__(81);
+var of_1 = __webpack_require__(82);
 Observable_1.Observable.of = of_1.of;
 //# sourceMappingURL=of.js.map
 
@@ -30148,7 +30195,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var Subscription_1 = __webpack_require__(121);
+var Subscription_1 = __webpack_require__(122);
 /**
  * A unit of work to be executed in a {@link Scheduler}. An action is typically
  * created from within a Scheduler and an RxJS user does not need to concern
@@ -32802,7 +32849,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
  */
 var platform_browser_dynamic_1 = __webpack_require__(175);
 var environment_1 = __webpack_require__(277);
-var hmr_1 = __webpack_require__(123);
+var hmr_1 = __webpack_require__(124);
 /*
  * App Module
  * our top level module that holds all of our components

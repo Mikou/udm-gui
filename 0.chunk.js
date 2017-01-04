@@ -5,8 +5,8 @@ webpackJsonpac__name_([0],{
 
 "use strict";
 "use strict";
-var common_1 = __webpack_require__(82);
-var forms_1 = __webpack_require__(26);
+var common_1 = __webpack_require__(83);
+var forms_1 = __webpack_require__(24);
 var core_1 = __webpack_require__(0);
 var router_1 = __webpack_require__(36);
 var detail_component_1 = __webpack_require__(871);
