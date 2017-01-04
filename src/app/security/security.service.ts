@@ -53,7 +53,6 @@ export class SecurityService {
     userRegistration(user:User): Promise<string> {
         return new Promise( (resolve, reject) => {
             this.connectorService.call('udm.backend.userRegistration', [user]).then((registeredUser:User) => {
-                console.log("registeredUser", registeredUser);
                 resolve(registeredUser);
             }).catch( (err) => {
                 reject(err);

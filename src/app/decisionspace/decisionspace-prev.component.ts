@@ -7,8 +7,12 @@ import { Router } from '@angular/router';
             button: {
                 float:right;
             }
+            .publicationstate {
+                float:right;
+            }
     `],
     template: `
+        <i *ngIf="!decisionspace.published" class="publicationstate fa fa-lock"></i>
         <h3>{{decisionspace.name}}</h3>
         <p>{{decisionspace.description}}</p>
         <button (click)="onClick(decisionspace)">join</button>

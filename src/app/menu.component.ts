@@ -36,7 +36,8 @@ export class MenuComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.securityService.loggedInUser$.subscribe( () => {
+        this.securityService.loggedInUser$.subscribe( (user) => {
+            console.log("->", user);
             this.canRegister = this.securityService.hasRole('admin');
         })
     }

@@ -68,6 +68,7 @@ export class DecisionspacesComponent {
         // when logout action is triggered the decision spaces should be reloaded
         this.securityService.loggedInUser$.subscribe( () => {
             this.loadDecisionspace(this.securityService.getCurrentUser());
+            this.allowedCreateDecisionspace = this.securityService.hasRole('admin', 'domainexpert');
         })
     }
 

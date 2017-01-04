@@ -42,7 +42,7 @@ export class DecisionspaceService {
         });
     }
 
-    getDecisionSpaceInfo(id:number) {
+    getDecisionSpaceInfo(id:number): Promise<DecisionSpace> {
         return new Promise( (resolve, reject) => {
             //resolve(DECISIONSPACES[id]);
             this.connectorService.call('udm.backend.getDecisionspaceById', [id]).then( decisionspace => {
@@ -52,6 +52,18 @@ export class DecisionspaceService {
             })
         });
   
+    }
+
+    checkPermissions(userId:number, decisionspaceId:number): Promise<boolean> {
+        console.log(userId, decisionspaceId);
+        return new Promise((resolve, reject) => {
+            this.connectorService.call('udm.backend.checkPermissions', [userId, decisionspaceId] )
+                .then( hasAccess => {
+                    console.log(hasAccess);
+                    resolve(hasAccess)
+                })
+                .catch(err => reject(err));
+        });
     }
 
     ngOnInit() {}

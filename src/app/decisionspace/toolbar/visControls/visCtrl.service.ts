@@ -24,11 +24,18 @@ export class VisCtrlService {
         });
     }
 
-    create(visCtrl:any) {
-        
-        /*let list:List<VisCtrl>  = this._visCtrls.getValue();
-        let arr:Array<VisCtrl> = list.toArray();
-        arr.push(visCtrl);
-        this._visCtrls.next(List(arr)   );*/
+    create(visCtrl:any, userId:number) {
+        return new Promise( (resolve, reject) => {        
+            this.connectorService.call('udm.backend.createVisCtrl', [visCtrl, userId]).then( (res:VisCtrl) => {
+                let list:List<VisCtrl>  = this._visCtrls.getValue();
+                let arr:Array<VisCtrl> = list.toArray();
+                arr.push(visCtrl);
+                this._visCtrls.next(List(arr)   );
+                resolve(res);
+            }).catch(err => {
+                console.log(err);
+                reject(err);
+            })
+        });
     }
 }

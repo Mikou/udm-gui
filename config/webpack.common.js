@@ -207,7 +207,36 @@ module.exports = function (options) {
        */
       new CopyWebpackPlugin([
         { from: 'src/assets', to: 'assets' },
-        { from: 'src/meta'}
+        { from: 'src/meta'},
+        /** font-awesome crap **/
+        { 
+          from: 'node_modules/font-awesome/css/font-awesome.min.css', 
+          to: 'assets/font-awesome/css/font-awesome.min.css' 
+        },
+        { 
+          from: 'node_modules/font-awesome/fonts/FontAwesome.otf', 
+          to: 'assets/font-awesome/fonts/FontAwesome.otf'
+        },
+        { 
+          from: 'node_modules/font-awesome/fonts/fontawesome-webfont.eot', 
+          to: 'assets/font-awesome/fonts/fontawesome-webfont.eot'
+        },
+        { 
+          from: 'node_modules/font-awesome/fonts/fontawesome-webfont.svg', 
+          to: 'assets/font-awesome/fonts/fontawesome-webfont.svg'
+        },
+        { 
+          from: 'node_modules/font-awesome/fonts/fontawesome-webfont.ttf', 
+          to: 'assets/font-awesome/fonts/fontawesome-webfont.ttf'
+        },
+        { 
+          from: 'node_modules/font-awesome/fonts/fontawesome-webfont.woff', 
+          to: 'assets/font-awesome/fonts/fontawesome-webfont.woff'
+        },
+        { 
+          from: 'node_modules/font-awesome/fonts/fontawesome-webfont.woff2', 
+          to: 'assets/font-awesome/fonts/fontawesome-webfont.woff2'
+        },
       ]),
 
 

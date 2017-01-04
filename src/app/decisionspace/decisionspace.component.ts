@@ -11,7 +11,11 @@ import { UserinvitationComponent } from './userinvitation.component';
     <div class="intro">
       <span><strong>{{title}}</strong> | {{description}}</span>
     </div>
+    <div>
+      <p class="note">!!! Note: The drag-and-drop support and interaction with the elements in the decisionspace are still very buggy !!!</p>
+    <div>
     <udm-inviteuser [decisionspaceId]="decisionspaceId"></udm-inviteuser>
+
     <udm-canvas [decisionspaceId]="'ds'" [ngClass]="role"></udm-canvas>
   `,
   styles: [`
@@ -19,6 +23,11 @@ import { UserinvitationComponent } from './userinvitation.component';
       color:#fff;
       padding:1px 5px;
       background-color:lightslategray;
+    }
+    .note {
+      padding:5px;
+      color:#fff;
+      background-color:#800;
     }
     udm-inviteuser {
       float:right;

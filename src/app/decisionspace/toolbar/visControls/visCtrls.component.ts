@@ -1,11 +1,9 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-//import { ConnectionService} from '../../../socketFactory/connection.service';
-
-import { VisCtrlComponent} from './visCtrl.component';
-import { VisCtrlService } from './visCtrl.service';
-import { CreateVisCtrlComponent} from './createVisCtrl.component';
-import { VisCtrl } from './../../toolbar/visControls/visCtrl.model';
-import { SecurityService } from './../../../security/security.service';
+import { VisCtrlComponent}           from './visCtrl.component';
+import { VisCtrlService }            from './visCtrl.service';
+import { CreateVisCtrlComponent}     from './createVisCtrl.component';
+import { VisCtrl }                   from './../../toolbar/visControls/visCtrl.model';
+import { SecurityService }           from './../../../security/security.service';
 
 @Component({
   selector: 'udm-visctrls',
