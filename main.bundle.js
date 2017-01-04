@@ -1678,7 +1678,8 @@ module.exports = function() { throw new Error("define cannot be used indirect");
 /* 26 */,
 /* 27 */,
 /* 28 */,
-/* 29 */
+/* 29 */,
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1761,9 +1762,9 @@ var _a, _b;
 
 
 /***/ },
-/* 30 */,
 /* 31 */,
-/* 32 */
+/* 32 */,
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 // bufferish.js
@@ -1876,7 +1877,6 @@ function _is(name, key) {
 }
 
 /***/ },
-/* 33 */,
 /* 34 */,
 /* 35 */,
 /* 36 */,
@@ -2918,7 +2918,6 @@ var DecisionspaceService = (function () {
     };
     DecisionspaceService.prototype.checkPermissions = function (userId, decisionspaceId) {
         var _this = this;
-        console.log(userId, decisionspaceId);
         return new Promise(function (resolve, reject) {
             _this.connectorService.call('udm.backend.checkPermissions', [userId, decisionspaceId])
                 .then(function (hasAccess) {
@@ -8214,7 +8213,7 @@ exports.DraggableModule = DraggableModule;
 var core_1 = __webpack_require__(0);
 var platform_browser_1 = __webpack_require__(18);
 var forms_1 = __webpack_require__(24);
-var security_service_1 = __webpack_require__(29);
+var security_service_1 = __webpack_require__(30);
 var security_routes_1 = __webpack_require__(610);
 var login_component_1 = __webpack_require__(377);
 var register_component_1 = __webpack_require__(378);
@@ -8891,7 +8890,7 @@ exports.createCodec = createCodec;
 exports.install = install;
 exports.filter = filter;
 
-var Bufferish = __webpack_require__(32);
+var Bufferish = __webpack_require__(33);
 
 function Codec(options) {
   if (!(this instanceof Codec)) return new Codec(options);
@@ -11429,7 +11428,7 @@ exports.slice = slice;
 exports.toString = toString;
 exports.write = gen("write");
 
-var Bufferish = __webpack_require__(32);
+var Bufferish = __webpack_require__(33);
 var Buffer = Bufferish.global;
 
 var isBufferShim = Bufferish.hasBuffer && ("TYPED_ARRAY_SUPPORT" in Buffer);
@@ -11514,7 +11513,7 @@ function gen(method) {
 
 exports.ExtBuffer = ExtBuffer;
 
-var Bufferish = __webpack_require__(32);
+var Bufferish = __webpack_require__(33);
 
 function ExtBuffer(buffer, type) {
   if (!(this instanceof ExtBuffer)) return new ExtBuffer(buffer, type);
@@ -11871,7 +11870,8 @@ __export(__webpack_require__(573));
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var security_service_1 = __webpack_require__(29);
+var router_1 = __webpack_require__(29);
+var security_service_1 = __webpack_require__(30);
 var decisionspace_service_1 = __webpack_require__(112);
 var UserToken = (function () {
     function UserToken() {
@@ -11892,25 +11892,38 @@ var Permissions = (function () {
 }());
 exports.Permissions = Permissions;
 var CanActivateDecisionspace = (function () {
-    function CanActivateDecisionspace(permissions, securityService, decisionspaceService) {
+    function CanActivateDecisionspace(router, permissions, securityService, decisionspaceService) {
+        this.router = router;
         this.permissions = permissions;
         this.securityService = securityService;
         this.decisionspaceService = decisionspaceService;
     }
     CanActivateDecisionspace.prototype.canActivate = function (route, state) {
+        var _this = this;
         if (this.securityService.hasRole('admin' || 'domainexpert')) {
             return true;
         }
         else {
-            var userId = (this.securityService.getCurrentUser()) ? this.securityService.getCurrentUser().id : null;
-            return this.decisionspaceService.checkPermissions(userId, parseInt(route.params['id']));
+            var userId_1 = (this.securityService.getCurrentUser()) ? this.securityService.getCurrentUser().id : null;
+            return new Promise(function (resolve, reject) {
+                _this.decisionspaceService.checkPermissions(userId_1, parseInt(route.params['id'])).then(function (hasPrivilege) {
+                    if (!hasPrivilege) {
+                        var link = ['/login'];
+                        _this.router.navigate(link);
+                        resolve(false);
+                    }
+                    else {
+                        resolve(true);
+                    }
+                });
+            });
         }
     };
     return CanActivateDecisionspace;
 }());
 CanActivateDecisionspace = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [Permissions, typeof (_a = typeof security_service_1.SecurityService !== "undefined" && security_service_1.SecurityService) === "function" && _a || Object, typeof (_b = typeof decisionspace_service_1.DecisionspaceService !== "undefined" && decisionspace_service_1.DecisionspaceService) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof router_1.Router !== "undefined" && router_1.Router) === "function" && _a || Object, Permissions, typeof (_b = typeof security_service_1.SecurityService !== "undefined" && security_service_1.SecurityService) === "function" && _b || Object, typeof (_c = typeof decisionspace_service_1.DecisionspaceService !== "undefined" && decisionspace_service_1.DecisionspaceService) === "function" && _c || Object])
 ], CanActivateDecisionspace);
 exports.CanActivateDecisionspace = CanActivateDecisionspace;
 var CanActivateAdminTeam = (function () {
@@ -11926,10 +11939,10 @@ var CanActivateAdminTeam = (function () {
 }());
 CanActivateAdminTeam = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [Permissions, typeof (_c = typeof security_service_1.SecurityService !== "undefined" && security_service_1.SecurityService) === "function" && _c || Object])
+    __metadata("design:paramtypes", [Permissions, typeof (_d = typeof security_service_1.SecurityService !== "undefined" && security_service_1.SecurityService) === "function" && _d || Object])
 ], CanActivateAdminTeam);
 exports.CanActivateAdminTeam = CanActivateAdminTeam;
-var _a, _b, _c;
+var _a, _b, _c, _d;
 
 
 /***/ },
@@ -12153,10 +12166,10 @@ exports.WidgetService = WidgetService;
 "use strict";
 var core_1 = __webpack_require__(0);
 var forms_1 = __webpack_require__(24);
-var router_1 = __webpack_require__(36);
+var router_1 = __webpack_require__(29);
 var decisionspace_service_1 = __webpack_require__(112);
 var notification_service_1 = __webpack_require__(73);
-var security_service_1 = __webpack_require__(29);
+var security_service_1 = __webpack_require__(30);
 var CreateDecisionspaceComponent = (function () {
     function CreateDecisionspaceComponent(_decisionspaceService, notificationService, securityService, router) {
         this._decisionspaceService = _decisionspaceService;
@@ -12212,7 +12225,7 @@ var _a, _b, _c, _d;
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var router_1 = __webpack_require__(36);
+var router_1 = __webpack_require__(29);
 var decisionspace_service_1 = __webpack_require__(112);
 var DecisionspaceComponent = (function () {
     function DecisionspaceComponent(activatedRoute, _dsService) {
@@ -12253,9 +12266,9 @@ var _a, _b;
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var router_1 = __webpack_require__(36);
+var router_1 = __webpack_require__(29);
 var decisionspace_service_1 = __webpack_require__(112);
-var security_service_1 = __webpack_require__(29);
+var security_service_1 = __webpack_require__(30);
 //@Guard('admin')
 var DecisionspacesComponent = (function () {
     function DecisionspacesComponent(activatedRoute, decisionspaceService, securityService, router) {
@@ -12408,7 +12421,7 @@ __export(__webpack_require__(604));
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var security_service_1 = __webpack_require__(29);
+var security_service_1 = __webpack_require__(30);
 var CanActivateRegistration = (function () {
     function CanActivateRegistration(securityService) {
         this.securityService = securityService;
@@ -12433,7 +12446,7 @@ var _a;
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var security_service_1 = __webpack_require__(29);
+var security_service_1 = __webpack_require__(30);
 var notification_service_1 = __webpack_require__(73);
 var forms_1 = __webpack_require__(24);
 var LoginComponent = (function () {
@@ -12475,7 +12488,7 @@ var _a, _b;
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var security_service_1 = __webpack_require__(29);
+var security_service_1 = __webpack_require__(30);
 var notification_service_1 = __webpack_require__(73);
 var forms_1 = __webpack_require__(24);
 var passwordConfirm_validator_1 = __webpack_require__(609);
@@ -15421,7 +15434,7 @@ function encode(input, options) {
 exports.FlexDecoder = FlexDecoder;
 exports.FlexEncoder = FlexEncoder;
 
-var Bufferish = __webpack_require__(32);
+var Bufferish = __webpack_require__(33);
 
 var MIN_BUFFER_SIZE = 2048;
 var MAX_BUFFER_SIZE = 65536;
@@ -15626,7 +15639,7 @@ var Int64BE = Int64Buffer.Int64BE;
 exports.getReadFormat = getReadFormat;
 exports.readUint8 = uint8;
 
-var Bufferish = __webpack_require__(32);
+var Bufferish = __webpack_require__(33);
 var BufferProto = __webpack_require__(261);
 
 var HAS_MAP = ("undefined" !== typeof Map);
@@ -20000,7 +20013,7 @@ __export(__webpack_require__(575));
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var router_1 = __webpack_require__(36);
+var router_1 = __webpack_require__(29);
 var AboutComponent = (function () {
     function AboutComponent(route) {
         this.route = route;
@@ -20058,7 +20071,7 @@ var _a;
  */
 var core_1 = __webpack_require__(0);
 var app_service_1 = __webpack_require__(233);
-var security_service_1 = __webpack_require__(29);
+var security_service_1 = __webpack_require__(30);
 /*
  * App Component
  * Top Level Component
@@ -20110,7 +20123,7 @@ var core_1 = __webpack_require__(0);
 var platform_browser_1 = __webpack_require__(18);
 var forms_1 = __webpack_require__(24);
 var http_1 = __webpack_require__(174);
-var router_1 = __webpack_require__(36);
+var router_1 = __webpack_require__(29);
 var hmr_1 = __webpack_require__(124);
 var decisionspace_module_1 = __webpack_require__(585);
 var toolbar_module_1 = __webpack_require__(372);
@@ -20512,7 +20525,7 @@ exports.WidgetModule = WidgetModule;
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var router_1 = __webpack_require__(36);
+var router_1 = __webpack_require__(29);
 var widget_service_1 = __webpack_require__(368);
 var WidgetlistComponent = (function () {
     function WidgetlistComponent(compiler, componentFactoryResolver, widgetService, activatedRoute, zone) {
@@ -20613,7 +20626,7 @@ var _a, _b, _c, _d, _e;
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var router_1 = __webpack_require__(36);
+var router_1 = __webpack_require__(29);
 var DecisionspacePreviewComponent = (function () {
     function DecisionspacePreviewComponent(router) {
         this.router = router;
@@ -20928,7 +20941,7 @@ exports.ToolbarComponent = ToolbarComponent;
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var security_service_1 = __webpack_require__(29);
+var security_service_1 = __webpack_require__(30);
 var visCtrl_service_1 = __webpack_require__(234);
 var forms_1 = __webpack_require__(24);
 var notification_service_1 = __webpack_require__(73);
@@ -21031,7 +21044,7 @@ exports.VisCtrlModule = VisCtrlModule;
 "use strict";
 var core_1 = __webpack_require__(0);
 var visCtrl_service_1 = __webpack_require__(234);
-var security_service_1 = __webpack_require__(29);
+var security_service_1 = __webpack_require__(30);
 var VisCtrlsComponent = (function () {
     function VisCtrlsComponent(visCtrlService, securityService, zone) {
         this.visCtrlService = visCtrlService;
@@ -21295,8 +21308,8 @@ var _a, _b;
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var router_1 = __webpack_require__(36);
-var security_service_1 = __webpack_require__(29);
+var router_1 = __webpack_require__(29);
+var security_service_1 = __webpack_require__(30);
 var MenuComponent = (function () {
     function MenuComponent(securityService, router) {
         var _this = this;
@@ -21478,7 +21491,7 @@ exports.PasswordConfirmValidator = PasswordConfirmValidator;
 
 "use strict";
 "use strict";
-var router_1 = __webpack_require__(36);
+var router_1 = __webpack_require__(29);
 var login_component_1 = __webpack_require__(377);
 var register_component_1 = __webpack_require__(378);
 var canActivate_1 = __webpack_require__(376);
@@ -21496,7 +21509,7 @@ exports.securityRouting = router_1.RouterModule.forChild([
 "use strict";
 "use strict";
 var core_1 = __webpack_require__(0);
-var security_service_1 = __webpack_require__(29);
+var security_service_1 = __webpack_require__(30);
 var SecurityNavComponent = (function () {
     function SecurityNavComponent(securityService) {
         this.securityService = securityService;
@@ -28661,7 +28674,7 @@ function copy(target, targetStart, start, end) {
 
 // bufferish-array.js
 
-var Bufferish = __webpack_require__(32);
+var Bufferish = __webpack_require__(33);
 
 var exports = module.exports = alloc(0);
 
@@ -28708,7 +28721,7 @@ function from(value) {
 
 // bufferish-buffer.js
 
-var Bufferish = __webpack_require__(32);
+var Bufferish = __webpack_require__(33);
 var Buffer = Bufferish.global;
 
 var exports = module.exports = Bufferish.hasBuffer ? alloc(0) : [];
@@ -28760,7 +28773,7 @@ function from(value) {
 
 // bufferish-uint8array.js
 
-var Bufferish = __webpack_require__(32);
+var Bufferish = __webpack_require__(33);
 
 var exports = module.exports = Bufferish.hasArrayBuffer ? alloc(0) : [];
 
@@ -28904,7 +28917,7 @@ Encoder.prototype.end = function(chunk) {
 
 exports.setExtPackers = setExtPackers;
 
-var Bufferish = __webpack_require__(32);
+var Bufferish = __webpack_require__(33);
 var Buffer = Bufferish.global;
 var packTypedArray = Bufferish.Uint8Array.from;
 var _encode;
@@ -28988,7 +29001,7 @@ function packError(value) {
 
 exports.setExtUnpackers = setExtUnpackers;
 
-var Bufferish = __webpack_require__(32);
+var Bufferish = __webpack_require__(33);
 var Buffer = Bufferish.global;
 var _decode;
 
@@ -29259,7 +29272,7 @@ var Uint64BE = Int64Buffer.Uint64BE;
 var Int64BE = Int64Buffer.Int64BE;
 
 var uint8 = __webpack_require__(430).uint8;
-var Bufferish = __webpack_require__(32);
+var Bufferish = __webpack_require__(33);
 var Buffer = Bufferish.global;
 var IS_BUFFER_SHIM = Bufferish.hasBuffer && ("TYPED_ARRAY_SUPPORT" in Buffer);
 var NO_TYPED_ARRAY = IS_BUFFER_SHIM && !Buffer.TYPED_ARRAY_SUPPORT;
@@ -29491,7 +29504,7 @@ var Int64Buffer = __webpack_require__(169);
 var Uint64BE = Int64Buffer.Uint64BE;
 var Int64BE = Int64Buffer.Int64BE;
 
-var Bufferish = __webpack_require__(32);
+var Bufferish = __webpack_require__(33);
 var BufferProto = __webpack_require__(261);
 var WriteToken = __webpack_require__(810);
 var uint8 = __webpack_require__(430).uint8;

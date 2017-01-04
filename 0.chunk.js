@@ -8,7 +8,7 @@ webpackJsonpac__name_([0],{
 var common_1 = __webpack_require__(83);
 var forms_1 = __webpack_require__(24);
 var core_1 = __webpack_require__(0);
-var router_1 = __webpack_require__(36);
+var router_1 = __webpack_require__(29);
 var detail_component_1 = __webpack_require__(871);
 console.log('`Detail` bundle loaded asynchronously');
 // async components must be named routes for WebpackAsyncRoute
