@@ -1,30 +1,36 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-
+import { Component, Input, Output, OnChanges, EventEmitter, SimpleChanges, SimpleChange } from '@angular/core';
 import { MakeDroppable } from '../shared/draggable/make-droppable.directive';
-import { WidgetlistComponent } from './widget/widgetlist.component'
+import { BundlesComponent } from './bundle/bundles.component';
+import { Bundle } from '../models/bundle.model';
+import { List } from 'immutable';
 
 @Component({
   selector: 'udm-canvas',
   styles:[`
   .canvas-content {
   }
-  udm-widgetlist {
+  udm-bundlelist {
     display:block;
   }
   `],
   template: `
-    <div class='canvas-content' makeDroppable (dropped)="widgetlist.droppedWidget($event)">
-      <udm-widgetlist [decisionspaceId]="decisionspaceId" #widgetlist></udm-widgetlist>
+    <div class='canvas-content' makeDroppable (dropped)="bundlelist.droppedbundle($event)">
+      <udm-bundles [decisionspaceId]="decisionspaceId" [bundles]="bundles" #bundlelist></udm-bundles>
     </div>
   `
 })
 export class CanvasComponent {
-  @Input() decisionspaceId:string
+  @Input() decisionspaceId: number;
+  @Input() bundles: List<Bundle>;
 
   constructor() {
   }
 
-  ngOnInit() {
-    console.log(this.decisionspaceId);
+  ngOnChanges(changes: { [propName: string]: SimpleChange }) {
+    this.bundles = changes["bundles"].currentValue;
   }
+
+  ngOnInit() {
+  }
+
 }

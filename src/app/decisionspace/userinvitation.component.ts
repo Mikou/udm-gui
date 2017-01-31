@@ -1,5 +1,5 @@
 import { Component, Input, Inject } from '@angular/core';
-import { UserinvitationService } from './userinvitation.service';
+import { UsermanagerService } from './usermanager.service';
 import { User }             from '../security/user.model';
 import { FormControl, Validators }   from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -23,7 +23,7 @@ export class UserinvitationComponent {
   username = new FormControl();
 
   constructor(
-    private userinvitationService:UserinvitationService,
+    private userinvitationService:UsermanagerService,
     @Inject(DOCUMENT) private document: any    
   ) {
       this.users = new Array<User>();

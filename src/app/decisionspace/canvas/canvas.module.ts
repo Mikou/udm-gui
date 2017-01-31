@@ -1,11 +1,11 @@
 import { NgModule }      from '@angular/core';
 import { DraggableModule } from '../shared/draggable/draggable.module';
-import { WidgetModule } from './widget/widget.module';
+import { bundleModule } from './bundle/bundle.module';
 
 import { CanvasComponent } from './canvas.component';
 
 @NgModule({
-  imports: [ DraggableModule, WidgetModule ],
+  imports: [ DraggableModule, bundleModule ],
   declarations: [ CanvasComponent ],
   exports: [CanvasComponent]
 })

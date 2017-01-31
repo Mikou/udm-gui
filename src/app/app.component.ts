@@ -38,6 +38,12 @@ import { SecurityNavComponent } from './securityNav.component';
             backend test
           </a>
         </span>
+        |
+        <span>
+          <a [routerLink]=" ['./gridsterFun'] ">
+            gridster test
+          </a>
+        </span>
 
         <udm-securitynav></udm-securitynav>
 

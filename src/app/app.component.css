@@ -63,6 +63,7 @@ span.active {
 udm-menu {
   width:201px;
   float:left;
+  position:fixed;
 }
 /* if content is preceeded by the menu */
 udm-menu + .content {

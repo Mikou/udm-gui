@@ -1,5 +1,4 @@
 import { Injectable }          from '@angular/core';
-import { USERS }               from './mock';
 import { User }                from './user.model';
 import { DecisionSpace }       from '../decisionspace/decisionspace.model';
 import { CandidateUser }       from './candidateUser.model';
@@ -40,11 +39,12 @@ export class SecurityService {
 
     userLogin(user:User): Promise<User> {
         return new Promise( (resolve, reject) => {
-            this.connectorService.call('udm.backend.userLogin', [user]).then( (user:User) => {
+            this.connectorService.call('backend.user.login', [user]).then( (user:User) => {
                 this.localStorageService.set('loggedInUser', user);
                 this._loggedInUser.next(user);
                 resolve(user);
             }).catch(err => {
+                console.log(err);
                 reject(err);
             });
         });
@@ -76,10 +76,6 @@ export class SecurityService {
 
     setLoggedInUser(user:User) {
         this._loggedInUser.next(user);
-    }
-
-    getUsers(): Promise<User[]> {
-        return Promise.resolve(USERS);
     }
 
     setAuthentication(user:User) {

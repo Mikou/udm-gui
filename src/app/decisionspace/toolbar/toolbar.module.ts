@@ -7,12 +7,12 @@ import { NgModule }      from '@angular/core';
 import { ToolbarComponent } from './toolbar.component';
 
 import { VisCtrlModule } from './visControls/visCtrl.module';
-import { FeaturelistModule } from './featurelist/featurelist.module';
+import { FeatureCtrlModule } from './featureControls/featureCtrl.module';
 
 /* Feature module */
 
 @NgModule({
-  imports: [ VisCtrlModule, FeaturelistModule ],
+  imports: [ VisCtrlModule, FeatureCtrlModule ],
   declarations: [ ToolbarComponent ],
   exports: [ToolbarComponent]
 })

@@ -34,7 +34,7 @@ export class ConnectorService {
                 let delay:number = 10;
                 function tryCall () {
                     if(connection.isOpen) {
-                        connection.session.call(endpoint, args).then((data) => {
+                        connection.session.call(endpoint, args).then( data => {
                             resolve(data);
                         }).catch((err) => {
                             let errorMessage = "Could not connect to the Server. Check that the server app is running";

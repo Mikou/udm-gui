@@ -15,25 +15,29 @@ export class VisCtrlService {
     constructor(
         private connectorService: ConnectorService
     ) {
-        //this._visCtrls.next(List<VisCtrl>(VISCTRLS));
-        this.connectorService.call('udm.backend.getVisCtrls', []).then( (res:Array<VisCtrl>) => {
+        //this._visCtrls.next(List<VisCtrl>(VISCTRLS))
+    }
+
+    loadVisCtrls():Observable<List<VisCtrl>> {
+        this.connectorService.call('backend.visctrl.retrieve', []).then( (res:Array<VisCtrl>) => {
             let l:List<VisCtrl> = List(res);
             this._visCtrls.next(l);
         }).catch(err => {
-            console.log(err);
         });
+
+        return this.visCtrls;
     }
 
     create(visCtrl:any, userId:number) {
         return new Promise( (resolve, reject) => {        
-            this.connectorService.call('udm.backend.createVisCtrl', [visCtrl, userId]).then( (res:VisCtrl) => {
+            visCtrl.author = userId;
+            this.connectorService.call('backend.visctrl.create', [visCtrl, userId]).then( (res:VisCtrl) => {
                 let list:List<VisCtrl>  = this._visCtrls.getValue();
                 let arr:Array<VisCtrl> = list.toArray();
                 arr.push(visCtrl);
-                this._visCtrls.next(List(arr)   );
+                this._visCtrls.next(List(arr));
                 resolve(res);
             }).catch(err => {
-                console.log(err);
                 reject(err);
             })
         });

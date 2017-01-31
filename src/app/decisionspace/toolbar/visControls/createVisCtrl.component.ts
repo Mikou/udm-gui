@@ -10,7 +10,8 @@ import {NotificationService} from '../../../notification/notification.service';
     template: `
         <h4>Import</h4>
         <form (ngSubmit)="onSubmit(visCtrl)" [formGroup]="visCtrl">
-            <p><label for="name">Name</label><input id="name" name="name" type="text" formControlName="name" /></p>
+            <p><label for="title">Title</label><input id="title" name="title" type="text" formControlName="title" /></p>
+            <p><label for="description">Description</label><input id="description" name="description" type="text" formControlName="description" /></p>
             <p><label for="url">Url</label><input id="url" name="url" type="text" formControlName="url" /></p>
             <button type="submit" [disabled]="visCtrl.invalid">Submit</button>
         </form>
@@ -27,7 +28,8 @@ export class CreateVisCtrlComponent implements OnInit {
     }
     ngOnInit() {
         this.visCtrl = new FormGroup({
-            name: new FormControl('', [Validators.minLength(3)]),
+            title: new FormControl('', [Validators.minLength(3)]),
+            description: new FormControl('', [Validators.minLength(3)]),
             url: new FormControl('', [])
         });
     }

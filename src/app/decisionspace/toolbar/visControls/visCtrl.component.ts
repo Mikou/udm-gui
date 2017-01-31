@@ -1,6 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MakeDraggable } from '../../shared/draggable/make-draggable.directive';
-
 @Component({
   selector: 'udm-visctrl',
   styles: [`
@@ -9,12 +8,14 @@ import { MakeDraggable } from '../../shared/draggable/make-draggable.directive';
     }
   `],
   template: `
-    <div [makeDraggable]="item"><div class="dragHandler">{{item.name}}</div></div>
+    <div [makeDraggable]="visctrl"><div class="dragHandler">{{visctrl.title}}</div></div>
   `
 })
 
 export class VisCtrlComponent {
-  @Input() item: string;
+  @Input() visctrl: string;
 
-  constructor() {}
+  constructor(
+  ) {}
+  
 }

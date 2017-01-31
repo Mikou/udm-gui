@@ -28,10 +28,10 @@ export class CanActivateDecisionspace implements CanActivate {
     if(this.securityService.hasRole('admin' || 'domainexpert')) {
       return true;
     } else {
-      const userId = (this.securityService.getCurrentUser()) ? this.securityService.getCurrentUser().id : null;
+      const user = this.securityService.getCurrentUser();
       return new Promise((resolve, reject) => {
-         this.decisionspaceService.checkPermissions(userId, parseInt(route.params['id'])).then( hasPrivilege => {
-           if(!hasPrivilege) {
+         this.decisionspaceService.checkPermissions(user, parseInt(route.params['id'])).then( canAccess => {
+           if(!canAccess) {
              const link = ['/login'];
              this.router.navigate(link);
              resolve(false);

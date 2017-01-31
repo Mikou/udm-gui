@@ -1,5 +1,5 @@
 export class VisCtrl {
-    type: 'VISCTRL'
-    name:string
+    title:string
     url:string
+    user_id: number
 }

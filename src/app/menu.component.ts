@@ -1,8 +1,8 @@
 import { Component, OnInit }              from '@angular/core';
 import { ToolbarComponent }               from './decisionspace/toolbar/toolbar.component';
-import { Router, NavigationStart, Event } from '@angular/router';
+import { Router, NavigationEnd, Event } from '@angular/router';
 import { NotificationComponent }          from './notification/notification.component';
-import {SecurityService}                  from './security/security.service';
+import { SecurityService }                  from './security/security.service';
 @Component({
     selector: 'udm-menu',
     styles: [`
@@ -28,7 +28,7 @@ export class MenuComponent implements OnInit {
         private router: Router
     ) {
         this.router.events.subscribe((event:Event) => {
-            if(event instanceof NavigationStart) {
+            if(event instanceof NavigationEnd) {
                 var re = new RegExp("decisionspaces\/detail\/[0-9]");
                 this.displayToolbar = (re.test(event.url));
             }

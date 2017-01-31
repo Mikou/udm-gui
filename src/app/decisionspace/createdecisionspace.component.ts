@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DecisionspaceService } from './decisionspace.service';
 import { NotificationService } from '../notification/notification.service';
-import { DecisionSpace } from './decisionspace.model';
+import { DecisionSpace } from './models/decisionspace.model';
 import { User } from '../security/user.model';
 import { SecurityService } from '../security/security.service';
 @Component({
@@ -45,12 +45,12 @@ export class CreateDecisionspaceComponent implements OnInit {
             this.notificationService.notify('Only logged in user are allowed to create new decision spaces', 'error');
             return;
         } else {
-            value.userid = user.id;
+            value.author = user.id;
         }
         
         this._decisionspaceService.create(value).then( (createdSpace:DecisionSpace) => {
             console.log(createdSpace);
-            this.notificationService.notify('The new decision space \'' + createdSpace.name +'\' was created.', 'success');
+            this.notificationService.notify('The new decision space \'' + createdSpace.title +'\' was created.', 'success');
             let link = ['/decisionspaces'];
             this.router.navigate(link);
         }).catch( err => {

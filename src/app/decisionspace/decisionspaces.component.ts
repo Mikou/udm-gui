@@ -46,7 +46,7 @@ export class DecisionspacesComponent {
     ) {}
 
     loadDecisionspace(loggedInUser:User) {
-        this.decisionspaceService.getDecisionspaces(loggedInUser).subscribe(decisionspaces => {
+        this.decisionspaceService.retrieveAll(loggedInUser).subscribe(decisionspaces => {
             this.decisionspaces = decisionspaces;
         });
     }

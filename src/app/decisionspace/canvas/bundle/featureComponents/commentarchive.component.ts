@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import { FeatureComponent } from './featureComponent.interface';
 
 @Component({
     selector: 'ud2d-comment-archive',
@@ -9,7 +10,7 @@ import {Component} from '@angular/core';
       <p><strong>comment 3</strong>, author: Alice, date:today</p>
     `
 })
-export class CommentarchiveComponent {
+export class CommentarchiveComponent implements FeatureComponent {
     constructor() {
     }
 }

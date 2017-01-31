@@ -1,34 +1,40 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 import { DraggableModule } from '../../shared/draggable/draggable.module';
-import { WidgetlistComponent } from './widgetlist.component';
-import { WidgetComponent } from './widget.component';
+import { BundlesComponent } from './bundles.component';
+import { BundleComponent } from './bundle.component';
 import { CommentFeatureComponent } from './featureComponents/comment.component';
 import { VisualizationComponent } from './visualization.component';
 import { CommentarchiveComponent } from './featureComponents/commentarchive.component';
 
 
-import { WidgetService } from './widget.service';
+import { BundleService } from './bundle.service';
 
 /* Feature module */
 
 @NgModule({
-  imports: [ BrowserModule, DraggableModule ],
+  imports: [ 
+    BrowserModule, 
+    DraggableModule,
+    FormsModule,
+    ReactiveFormsModule 
+  ],
   declarations: [ 
     CommentFeatureComponent, 
-    WidgetlistComponent, 
-    WidgetComponent, 
+    BundlesComponent, 
+    BundleComponent, 
     VisualizationComponent,
     CommentarchiveComponent
   ],
   entryComponents: [ 
     CommentFeatureComponent, 
     CommentarchiveComponent,
-    VisualizationComponent 
+    VisualizationComponent
   ],
   providers: [
-    WidgetService
+    BundleService
   ],
-  exports: [ WidgetlistComponent ]
+  exports: [ BundlesComponent ]
 })
-export class WidgetModule {}
+export class bundleModule {}

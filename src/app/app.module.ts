@@ -29,6 +29,8 @@ import { XLarge } from './home/x-large';
 import { ConnectionTestComponent } from './connectionTest.component';
 import { CanActivateDecisionspace, CanActivateAdminTeam, Permissions} from './canActivateTeam';
 
+import {GridsterComponent} from './gridster/gridster.component';
+
 // Application wide providers
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
@@ -51,6 +53,7 @@ type StoreType = {
     FooterComponent,
     AboutComponent,
     HomeComponent,
+    GridsterComponent,
     NoContentComponent,
     MenuComponent,
     ConnectionTestComponent,

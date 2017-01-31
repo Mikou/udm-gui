@@ -30,7 +30,7 @@ import { SecurityService }           from './../../../security/security.service'
     <h3>{{title}}</h3>
     <udm-visctrl 
       *ngFor="let visCtrl of visCtrls" 
-      [item]="visCtrl"
+      [visctrl]="visCtrl"
     >
     </udm-visctrl>
     <div *ngIf="showCreateForm">
@@ -53,8 +53,10 @@ export class VisCtrlsComponent {
 
   ngOnInit() {
     this.securityService.loggedInUser$.subscribe( user => this.showCreateForm = this.securityService.hasRole('admin', 'domainexpert') );
-    this.visCtrlService.visCtrls.subscribe( (visCtrls) => {
+    this.visCtrlService.loadVisCtrls().subscribe( (visCtrls) => {
       this.zone.run( () => this.visCtrls = visCtrls.toArray() );
     });
+
+    
   }
 }

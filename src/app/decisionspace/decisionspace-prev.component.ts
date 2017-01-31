@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
     `],
     template: `
         <i *ngIf="!decisionspace.published" class="publicationstate fa fa-lock"></i>
-        <h3>{{decisionspace.name}}</h3>
+        <h3>{{decisionspace.title}}</h3>
         <p>{{decisionspace.description}}</p>
         <button (click)="onClick(decisionspace)">join</button>
         `

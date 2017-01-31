@@ -9,8 +9,11 @@ import { DecisionspacesComponent } from './decisionspaces.component';
 import { ToolbarModule } from './toolbar/toolbar.module';
 import { CanvasModule } from './canvas/canvas.module';
 import { DecisionspaceService } from './decisionspace.service';
+import { InfomanagerComponent } from './infomanager.component';
+import { UsermanagerComponent } from './usermanager.component';
+import { UserlistComponent } from './userlist.component';
 import { UserinvitationComponent } from './userinvitation.component';
-import { UserinvitationService } from './userinvitation.service';
+import { UsermanagerService } from './usermanager.service';
 import { SecurityModule } from '../security/security.module';
 import { ConnectorModule } from '../connector/connector.module';
 
@@ -24,12 +27,15 @@ import { ConnectorModule } from '../connector/connector.module';
     SecurityModule,
     ConnectorModule
   ],
-  providers: [ DecisionspaceService, UserinvitationService ],
+  providers: [ DecisionspaceService, UsermanagerService ],
   declarations: [ 
     DecisionspacePreviewComponent, 
     DecisionspaceComponent, 
     DecisionspacesComponent,
     CreateDecisionspaceComponent, 
+    InfomanagerComponent,
+    UsermanagerComponent,
+    UserlistComponent,
     UserinvitationComponent,
   ],
   exports: [ DecisionspacesComponent ]

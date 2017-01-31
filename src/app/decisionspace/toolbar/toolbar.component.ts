@@ -6,7 +6,7 @@ import {VislistComponent} from './visControls/vislist.component'
   template: `
     <h2>{{title}}</h2>
     <udm-visctrls></udm-visctrls>
-    <udm-featurelist></udm-featurelist>
+    <udm-featurectrls></udm-featurectrls>
   `
 })
 

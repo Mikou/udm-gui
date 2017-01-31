@@ -35,7 +35,10 @@ export class LoginComponent implements OnInit {
     onSubmit({ value, valid }: { value: User, valid: boolean }) {
         if(valid) {
             this._securitySvc.userLogin(value).then((user:User) => {
-            }).catch( err => this._notificationSvc.notify(err, 'error'));
+            }).catch( err => {
+                console.log(err);
+                this._notificationSvc.notify(err, 'error')
+            });
         }
     }
 }
