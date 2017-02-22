@@ -1,8 +1,8 @@
 import { Component, OnInit }              from '@angular/core';
 import { ToolbarComponent }               from './decisionspace/toolbar/toolbar.component';
-import { Router, NavigationEnd, Event } from '@angular/router';
+import { Router, NavigationEnd, Event }   from '@angular/router';
 import { NotificationComponent }          from './notification/notification.component';
-import { SecurityService }                  from './security/security.service';
+import { SecurityService }                from './security/security.service';
 @Component({
     selector: 'udm-menu',
     styles: [`
@@ -10,7 +10,7 @@ import { SecurityService }                  from './security/security.service';
     `],
     template: `
         <ul>
-            <li *ngIf="canRegister">
+            <li>
             <a [routerLink]=" ['./register'] ">
                 Add a new user
             </a>

@@ -33,12 +33,10 @@ export class BundleService {
     addFeature(decisionspaceId:number, bundleId:number, featureCtrl:FeatureCtrl):Promise<number> {
         return new Promise<number>((resolve, reject) => {
         this.connectorService.call('backend.bundle.addFeature', [decisionspaceId, bundleId, featureCtrl])
-            .then( (id:number) => {
-                console.log(id);
-                resolve(id);
+            .then( (featureId:number) => {
+                resolve(featureId);
             })
             .catch(err => {
-                console.log(err);
                 reject(err);
             });
         })
@@ -61,7 +59,6 @@ export class BundleService {
                     const arr = bundles.toArray();
                     arr.push(bundle);
                     const newBundleList:List<Bundle> = List(arr);
-                    console.log(newBundleList);
                     this._bundles.next(newBundleList);
                     resolve();
                 })

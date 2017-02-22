@@ -1,12 +1,12 @@
 import { Component, ViewChild,ViewContainerRef, Compiler, ComponentFactoryResolver, ComponentRef, Input, OnInit, NgZone, SimpleChange } from '@angular/core';
 import { CommentFeatureComponent } from './featureComponents/comment.component';
-import { BundleComponent } from './bundle.component';
-import { ActivatedRoute } from '@angular/router';
-import { BundleService } from './bundle.service';
-import { VisCtrl } from './../../toolbar/visControls/visCtrl.model';
-import { FeatureCtrl } from './../../toolbar/featureControls/featureCtrl.model';
-import { List } from 'immutable';
-import { Bundle } from './bundle.model';
+import { BundleComponent }         from './bundle.component';
+import { ActivatedRoute }          from '@angular/router';
+import { BundleService }           from './bundle.service';
+import { VisCtrl }                 from './../../toolbar/visControls/visCtrl.model';
+import { FeatureCtrl }             from './../../toolbar/featureControls/featureCtrl.model';
+import { List }                    from 'immutable';
+import { Bundle }                  from './bundle.model';
 
 @Component({
   selector: 'udm-bundles',
@@ -30,7 +30,6 @@ import { Bundle } from './bundle.model';
     </udm-bundle>
   `
 })
-
 export class BundlesComponent implements OnInit {
   @Input() decisionspaceId:number;
   @Input() bundles:List<Bundle>;
@@ -50,17 +49,12 @@ export class BundlesComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
       this.bundleService.bundles.subscribe( (bundles:List<Bundle>) => {
-        console.log(bundles);
         this.zone.run( () => this.bundles = bundles );
       })
     });
   }
   ngOnChanges(changes: { [propName: string]: SimpleChange }) {
-    //this.bundles = <List<Bundle>> changes["bundles"].currentValue;
-
     this.bundleService.setBundles(<List<Bundle>> changes["bundles"].currentValue);
- 
-    //this.bundleService.setBundles(<List<Bundle>> changes["bundles"].currentValue);
   }
   onDelete(bundleId:number):void {
     this.bundles.forEach((bundle:any, index:any, object:any) => {
@@ -80,22 +74,8 @@ export class BundlesComponent implements OnInit {
     this.bundles.sort((a:any, b:any) => a.order - b.order);
   }
   deployVisualization(name:string, url:string) {
-    /*let gravity = this.bundles.length;
-    this.bundleService.addVisualization({ 
-      id:this.bundles.length, 
-      type:'bundle', 
-      cptType:'visualization', 
-      name:name, gravity:gravity,
-      visualization: {
-        url:url
-      }
-    });*/
   }
   deployFeature(src:any) {
-    /*let order = this.bundles.length;
-    this.bundles.push({ id:this.bundles.size, type:'bundle', cptType:src.cptType, name:src.name, order:order,
-      config: src.config
-    });*/
   }
   droppedbundle(src: VisCtrl | FeatureCtrl, trg: any) {
     // only visualization bundles can be instantiated here

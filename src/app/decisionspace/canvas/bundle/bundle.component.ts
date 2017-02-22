@@ -9,15 +9,16 @@ import {
     Output, 
     EventEmitter,
 } from '@angular/core';
-import { BundleService } from './bundle.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { MakeDraggable } from '../../shared/draggable/make-draggable.directive';
-import { VisualizationComponent } from './visualization.component';
+import { BundleService }           from './bundle.service';
+import { DomSanitizer }            from '@angular/platform-browser';
+import { MakeDraggable }           from '../../shared/draggable/make-draggable.directive';
+import { VisualizationComponent }  from './visualization.component';
 import { CommentFeatureComponent } from './featureComponents/comment.component';
 import { CommentarchiveComponent } from './featureComponents/commentarchive.component';
-import { FeatureCtrl } from '../../toolbar/featureControls/featureCtrl.model';
-import { Bundle } from '../../models/bundle.model';
-import { FeatureComponent } from './featureComponents/featureComponent.interface';
+import { FeatureCtrl }             from '../../toolbar/featureControls/featureCtrl.model';
+import { Bundle }                  from '../../models/bundle.model';
+import { FeatureComponent }        from './featureComponents/featureComponent.interface';
+import { ConnectorService }       from '../../../connector/connector.service';
 
 @Component({
   selector: 'udm-bundle',
@@ -31,7 +32,7 @@ import { FeatureComponent } from './featureComponents/featureComponent.interface
   template: `
     <div [makeDraggable]="bundle" makeDroppable (dropped)="droppedbundle($event)">
         <div class="header dragHandler">
-            <h4>{{bundle.title}}</h4><button class="delete" (click)="deletebundle(bundle.id)">delete</button>
+            <h4>{{bundle.title}}, id: {{bundle.id}}</h4><button class="delete" (click)="deletebundle(bundle.id)">delete</button>
             <p>{{bundle.description}}</p>
         </div>
         <div class="content">
@@ -49,7 +50,9 @@ export class BundleComponent {
     constructor(
         private domSanitizer: DomSanitizer,
         private componentFactoryResolver: ComponentFactoryResolver,
-        private bundleService: BundleService
+        private bundleService: BundleService,
+        private connectorService: ConnectorService,
+
     ) {}
 
     ngOnInit() {
@@ -57,12 +60,15 @@ export class BundleComponent {
         const factory = this.componentFactoryResolver.resolveComponentFactory(VisualizationComponent);
         const cmpRef:ComponentRef<VisualizationComponent> = this.target.createComponent(factory);
         cmpRef.instance.visualization = this.bundle.visualization;    
-
+        
         if(this.bundle.features) {
             this.bundle.features.forEach( (feature) => {
                 let featureComponent = this.getFeatureComponentType(feature.componentType);
                 const factory = this.componentFactoryResolver.resolveComponentFactory(featureComponent);
                 const cmpRef:ComponentRef<FeatureComponent> = this.target.createComponent(factory);
+                cmpRef.instance.decisionspaceId = this.decisionspaceId;
+                cmpRef.instance.bundleId        = this.bundle.id;
+                cmpRef.instance.payload         = feature["payload"];
             });
         }
     }
@@ -78,17 +84,21 @@ export class BundleComponent {
         } else if(componentType == 'COMMENT_ARCHIVE') {
             featureComponent = CommentarchiveComponent;
         }
-
         return featureComponent;
     }
 
     droppedbundle(src:FeatureCtrl) {
         this.bundleService.addFeature(this.decisionspaceId, this.bundle.id, src)
-            .then( res => {
-                let featureComponent = this.getFeatureComponentType(src.componentType);
-                const factory = this.componentFactoryResolver.resolveComponentFactory(featureComponent);
-                const cmpRef:ComponentRef<FeatureComponent> = this.target.createComponent(factory);
-            })
-            .catch( err => console.log(err));
+        .then( (featureId:number) => {
+            let featureComponent = this.getFeatureComponentType(src.componentType);
+            const factory = this.componentFactoryResolver.resolveComponentFactory(featureComponent);
+            const cmpRef:ComponentRef<FeatureComponent> = this.target.createComponent(factory);
+            cmpRef.instance.decisionspaceId = this.decisionspaceId;
+            cmpRef.instance.bundleId = this.bundle.id;
+            cmpRef.instance.payload  = null;
+            if(cmpRef.instance['onDeploy'])
+                cmpRef.instance['onDeploy'](); 
+        })
+        .catch( err => console.log(err));
     }
 }

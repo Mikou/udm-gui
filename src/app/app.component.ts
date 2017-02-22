@@ -73,7 +73,7 @@ export class AppComponent {
   constructor(
     public securityService: SecurityService,
     public appState: AppState
-    ) 
+    )
   {}
 
   ngOnInit() {

@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 import { DraggableModule } from '../../shared/draggable/draggable.module';
 import { BundlesComponent } from './bundles.component';
 import { BundleComponent } from './bundle.component';
+import { CommentarchiveComponent } from './featureComponents/commentarchive.component';
 import { CommentFeatureComponent } from './featureComponents/comment.component';
 import { VisualizationComponent } from './visualization.component';
-import { CommentarchiveComponent } from './featureComponents/commentarchive.component';
 
 
 import { BundleService } from './bundle.service';
