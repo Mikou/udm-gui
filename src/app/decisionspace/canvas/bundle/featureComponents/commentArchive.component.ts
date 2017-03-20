@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, NgZone } from '@angular/core';
-import { FeatureComponent }       from './featureComponent.interface';
+import { Feature }                from './feature.interface';
 import { List }                   from 'immutable';
 import { Observable }             from 'rxjs/Observable';
 import { BehaviorSubject }        from 'rxjs/BehaviorSubject';
@@ -16,7 +16,7 @@ import { ConnectorService }       from '../../../../connector/connector.service'
       </ul>
     `
 })
-export class CommentarchiveComponent implements FeatureComponent {
+export class CommentArchiveComponent implements Feature {
     //private _subscriptionMessage: BehaviorSubject<List<SubscriptionMessage>> = new BehaviorSubject(List([]));
     //public subscriptionMessage: Observable<List<SubscriptionMessage>> = this._subscriptionMessage.asObservable();
 
@@ -30,13 +30,14 @@ export class CommentarchiveComponent implements FeatureComponent {
     constructor(
         private connectorService: ConnectorService,
         private zone:NgZone,
-    ) {
-    }
+    ) {}
 
     onDeploy () {
+        let _comments = this.comments
         this.connectorService.call('backend.feature.retrievecontent', [this.decisionspaceId, this.bundleId, 'COMMENT'])
         .then( res => {
-            console.log("CONTENTS:", res);
+            const comments = res.map( featureContent => featureContent.data );
+            this.zone.run( () => this.comments = comments );
         })
         .catch(err => {
             console.log(err);

@@ -1,5 +1,4 @@
 import { Component, ViewChild,ViewContainerRef, Compiler, ComponentFactoryResolver, ComponentRef, Input, OnInit, NgZone, SimpleChange } from '@angular/core';
-import { CommentFeatureComponent } from './featureComponents/comment.component';
 import { BundleComponent }         from './bundle.component';
 import { ActivatedRoute }          from '@angular/router';
 import { BundleService }           from './bundle.service';
@@ -57,9 +56,9 @@ export class BundlesComponent implements OnInit {
     this.bundleService.setBundles(<List<Bundle>> changes["bundles"].currentValue);
   }
   onDelete(bundleId:number):void {
-    this.bundles.forEach((bundle:any, index:any, object:any) => {
-        if(bundle.id == bundleId) object.splice(index,1);
-    });
+    
+    const newBundleList = this.bundles.filter( bundle => bundle["id"] != bundleId)
+    this.bundleService.setBundles(newBundleList.toList());
   }
   moveRow(src:number, trg:number) {
     if(src > trg) {

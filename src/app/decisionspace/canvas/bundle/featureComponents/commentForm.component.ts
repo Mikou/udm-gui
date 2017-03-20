@@ -5,6 +5,8 @@ import { DecisionspaceService } from '../../../decisionspace.service';
 import { ConnectorService }     from '../../../../connector/connector.service';
 import { SecurityService }      from '../../../../security/security.service';
 import { FeatureComponent }     from './featureComponent.interface';
+import { Feature }     from './feature.interface';
+
 import { NotificationService}   from '../../../../notification/notification.service';
 @Component({
     selector: 'ud2d-comment',
@@ -25,7 +27,7 @@ import { NotificationService}   from '../../../../notification/notification.serv
       </form>
     `
 })
-export class CommentFeatureComponent implements OnInit, FeatureComponent {
+export class CommentFormComponent implements OnInit, Feature {
 
     @Input() decisionspaceId:number;
     @Input() bundleId:number;
@@ -45,6 +47,10 @@ export class CommentFeatureComponent implements OnInit, FeatureComponent {
         topic: new FormControl(''),
         message: new FormControl('')
       });
+    }
+
+    onDeploy() {
+      
     }
 
     onSubmit({ value, valid }: { value: Comment, valid: boolean }) {

@@ -30,9 +30,9 @@ export class BundleService {
         this._bundles.next(bundles);
     }
 
-    addFeature(decisionspaceId:number, bundleId:number, featureCtrl:FeatureCtrl):Promise<number> {
+    addFeature(decisionspaceId:number, bundleId:number, featureCtrl:FeatureCtrl, gravity:number):Promise<number> {
         return new Promise<number>((resolve, reject) => {
-        this.connectorService.call('backend.bundle.addFeature', [decisionspaceId, bundleId, featureCtrl])
+        this.connectorService.call('backend.bundle.addFeature', [decisionspaceId, bundleId, featureCtrl, gravity])
             .then( (featureId:number) => {
                 resolve(featureId);
             })

@@ -1,5 +1,6 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ConnectorService} from '../../../connector/connector.service';
+import { NotificationService} from '../../../notification/notification.service';
 import { Injectable }      from '@angular/core';
 import { List }            from 'immutable';
 import { Observable }      from 'rxjs/Observable';
@@ -11,17 +12,18 @@ export class FeatureCtrlService {
     public visCtrls: Observable<List<FeatureCtrl>> = this._visCtrls.asObservable();
 
     constructor(
-        private connectorService: ConnectorService
+        private connectorService: ConnectorService,
+        private notificationService: NotificationService
     ) {
         //this._visCtrls.next(List<VisCtrl>(VISCTRLS))
     }
 
     loadFeatureCtrls():Observable<List<FeatureCtrl>> {
         this.connectorService.call('backend.featurectrl.retrieve', []).then( (res:Array<FeatureCtrl>) => {
-            console.log(res);
-            let l:List<FeatureCtrl> = List(res);
-            this._visCtrls.next(l);
+            let controls:List<FeatureCtrl> = List(res);
+            this._visCtrls.next(controls);
         }).catch(err => {
+            this.notificationService.notify("Failed to load feature the controls", "error");
         });
 
         return this.visCtrls;

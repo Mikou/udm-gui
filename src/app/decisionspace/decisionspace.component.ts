@@ -1,4 +1,4 @@
-import { Component }               from '@angular/core';
+import { Component, NgZone}               from '@angular/core';
 import { ActivatedRoute, Router }  from '@angular/router';
 import { ToolbarComponent }        from './toolbar/toolbar.component';
 import { DecisionspaceService }    from './decisionspace.service';
@@ -9,6 +9,7 @@ import { NotificationService }     from '../notification/notification.service';
 import { DecisionSpace }           from './models/decisionspace.model';
 import { Bundle }                  from './models/bundle.model';
 import { List }                    from 'immutable';
+import { DsHeader }                from './models/dsHeader.model';
 
 @Component({
   selector: 'udm-decisionspace',
@@ -20,7 +21,7 @@ import { List }                    from 'immutable';
       <p class="note">!!! Note: The drag-and-drop support and interaction with the elements in the decisionspace are still very buggy !!!</p>
     <div>
 
-    <udm-infomanager></udm-infomanager>
+    <udm-infomanager [decisionspaceId]="decisionspaceId" [title]="title" [description]="description" (headerUpdate)="onHeaderUpdate($event)"></udm-infomanager>
 
     <div *ngIf="displayUserManager">
       <udm-usermanager [decisionspaceId]="decisionspaceId"></udm-usermanager>
@@ -90,7 +91,8 @@ export class DecisionspaceComponent {
     private activatedRoute: ActivatedRoute,
     private _dsService: DecisionspaceService,
     private securityService: SecurityService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private zone:NgZone
 
   ) {}
 
@@ -112,6 +114,15 @@ export class DecisionspaceComponent {
         })
         .catch( err => this.notificationService.notify(err, 'error'))
     });
+  }
+
+  onHeaderUpdate(dsHeader:DsHeader) {
+    this.zone.run( () => {
+      this.title= dsHeader.title;
+      this.description = dsHeader.description;
+    } );
+
+
   }
 
   ngOnDestroy() {

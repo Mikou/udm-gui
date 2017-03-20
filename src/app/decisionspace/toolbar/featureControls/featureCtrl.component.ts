@@ -20,5 +20,6 @@ import { MakeDraggable } from '../../shared/draggable/make-draggable.directive';
 export class FeatureCtrlComponent {
   @Input() featureCtrl: string;
 
-
+  constructor() {
+  }
 }
